@@ -1,64 +1,77 @@
 # TA Skills (Teacher Agent Skills)
 
-A teaching-skills plugin for teacher agents and AI teaching assistants.
+A practical collection of AI teaching-assistant skills for teachers.
 
 [中文](README.md)
 
-TA Skills packages handout authoring, teaching-material digitization, OCR, mathematical exposition, geometry generation, and olympiad problem solving as reusable [Agent Skills](https://agentskills.io/). The current collection starts with mathematics education and can grow into other subjects and teaching scenarios.
+TA Skills turns handout authoring, teaching-material digitization, OCR, mathematical exposition, geometry generation, and olympiad problem solving into reusable [Agent Skills](https://agentskills.io/). Its current workflows use LaTeX as a core material format and can be adapted to many subjects and teaching settings.
 
 ## Quick Start
 
-### Install the plugin
+The options below cover Codex, Claude Code, Trae Work, WorkBuddy, Doubao Work, Qwen Office, and DeepSeek Harness. Choose the method supported by your current agent: plugin installation, the Skills CLI, or a local Skills directory.
 
-For Codex, Claude Code, Cursor, and other plugin-compatible agents:
+### Install by prompt (recommended)
+
+Send this prompt to the agent you are using:
+
+```text
+Install the teaching skills from https://github.com/YZDame/ta-skills. Read README.md and THIRD_PARTY.md first, then list the Skills under skills/ and explain what each one does so I can choose what to install. If this environment supports plugins, run npx plugins add YZDame/ta-skills. If it supports the Skills CLI, run npx skills add YZDame/ta-skills. If it only provides a Skills page or local Skills directory, import each selected complete Skill folder rather than copying SKILL.md alone. After installation, verify that each SKILL.md is discoverable, identify math-olympiad as content sourced from Anthropic, and report any APIs or local software that still need configuration.
+```
+
+This method works well with WorkBuddy, Doubao Work, Qwen Office, and other agents that can read a GitHub repository or run installation commands.
+
+### Install the complete plugin from the command line
+
+In an environment that supports the Plugins CLI, run:
 
 ```bash
 npx plugins add YZDame/ta-skills
 ```
 
-The installer presents the `teacher-agent-skills` plugin with all included Skills.
+The installer should identify the plugin as `ta-skills` and discover all five included Skills.
 
-### Install one Skill
+### Install one Skill from the command line
 
 ```bash
 npx skills add YZDame/ta-skills --skill tsqx-gen
 ```
 
-Replace `tsqx-gen` with another name from the table below. To select a target agent:
+Replace `tsqx-gen` with another name from the tables below. To target a specific agent, use:
 
 ```bash
 npx skills add YZDame/ta-skills -a <agent-name>
 ```
 
-This route works with Codex, Claude Code, TRAE, Qwen Code, and other agents supported by the Skills CLI. For DeepSeek Harness, place each selected complete Skill directory under the project-level `.agents/skills/` or its user-level Skills directory.
+This method works with Codex, Claude Code, Trae Work, and other agents supported by the Skills CLI.
 
-### Send one prompt to your agent
+### Import manually
 
-If you do not normally use a terminal, send this prompt to your agent:
+Download and extract the repository ZIP, then import a complete Skill directory from [`skills/`](skills/). A Skill may include scripts, references, and templates, so do not copy `SKILL.md` by itself.
 
-```text
-Install the teaching skills from https://github.com/YZDame/ta-skills. Read the README first, list the Skills in the teacher-agent-skills plugin and let me choose. If this environment supports plugins, run npx plugins add YZDame/ta-skills. If it is supported by the Skills CLI, run npx skills add YZDame/ta-skills. If the current agent only provides a local Skills directory, install each selected complete Skill folder there. Verify that every SKILL.md is discoverable and report any APIs or local software that still need configuration.
-```
-
-For WorkBuddy, Doubao Work, and Qwen Office, download the repository ZIP and import the required directory from `plugins/teacher-agent-skills/skills/` through the product's Skills page. If the product can read GitHub directly, send it the prompt above instead.
+WorkBuddy, Doubao Work, and Qwen Office can import Skills through their Skills pages. For DeepSeek Harness, place each selected directory under the project-level `.agents/skills/` or its user-level Skills directory.
 
 ## Plugin Contents
 
-### Teacher Agent Skills (`teacher-agent-skills`)
+### Original Skills in this repository
 
 | Skill | Purpose |
 | --- | --- |
-| [`digitize-math-lectures`](plugins/teacher-agent-skills/skills/digitize-math-lectures/) | Turn boards, exams, scans, PDFs, manuscripts, and existing LaTeX into editable teaching materials ready for review. |
-| [`math-exposition-latex`](plugins/teacher-agent-skills/skills/math-exposition-latex/) | Write Chinese mathematical explanations, proofs, competition mini-lectures, and LaTeX teaching materials. |
-| [`mistral-ocr`](plugins/teacher-agent-skills/skills/mistral-ocr/) | Use Mistral OCR with PDFs, scanned pages, images, and public document URLs. |
-| [`tsqx-gen`](plugins/teacher-agent-skills/skills/tsqx-gen/) | Generate and check TSQX geometry code from problems, images, or written descriptions. |
-| [`math-olympiad`](plugins/teacher-agent-skills/skills/math-olympiad/) | Solve and verify olympiad mathematics problems; sourced from Anthropic's official plugin repository. |
+| [`digitize-math-lectures`](skills/digitize-math-lectures/) | Turn boards, exams, scans, PDFs, manuscripts, and existing LaTeX into editable teaching materials ready for review. |
+| [`math-exposition-latex`](skills/math-exposition-latex/) | Write Chinese mathematical explanations, proofs, competition handouts, and LaTeX teaching materials. |
+| [`mistral-ocr`](skills/mistral-ocr/) | Use Mistral OCR with PDFs, scanned pages, images, and public document URLs. |
+| [`tsqx-gen`](skills/tsqx-gen/) | Generate and check TSQX geometry code from problems, images, or written descriptions. |
 
-## External Skill
+### Bundled external Skill
 
-[`mineru-ai`](vendor-skills/mineru-ai/) currently contains upstream source and installation notes. The complete upstream Skill is not copied because its repository does not yet provide clear redistribution terms.
+| Skill | Purpose and source |
+| --- | --- |
+| [`math-olympiad`](skills/math-olympiad/) | Solve and verify olympiad mathematics problems. Sourced from [Anthropic's official plugin repository](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/math-olympiad) under Apache License 2.0; see [`UPSTREAM.md`](skills/math-olympiad/UPSTREAM.md) for the pinned revision and modification notice. |
 
-See [THIRD_PARTY.md](THIRD_PARTY.md) for provenance and licensing details.
+### External Skill available by source link only
+
+[`mineru-ai`](vendor-skills/mineru-ai/) currently contains only its upstream link and installation notes. Its upstream repository does not provide clear redistribution terms, so this repository does not copy the complete Skill.
+
+See [THIRD_PARTY.md](THIRD_PARTY.md) for the provenance and licensing boundaries of all external content.
 
 ## Runtime Requirements
 
@@ -71,6 +84,20 @@ Skills define workflows; some capabilities require additional tools:
 | TSQX generation and verification | TSQX and Asymptote; not required when only generating source code |
 | Document digitization | OCR, PDF conversion, or figure-reconstruction tools selected for the source material |
 
+## Repository Layout
+
+```text
+ta-skills/
+├── .codex-plugin/plugin.json
+├── .claude-plugin/plugin.json
+├── skills/
+├── vendor-skills/
+├── README.md
+├── README.en.md
+├── LICENSE
+└── THIRD_PARTY.md
+```
+
 ## License
 
-Original content in this repository is licensed under the [Apache License 2.0](LICENSE). External Skills retain their own attribution and license terms.
+Original content in this repository is licensed under the [Apache License 2.0](LICENSE). The root license does not replace the license terms of external content; external Skills remain governed by their bundled license files and [THIRD_PARTY.md](THIRD_PARTY.md).

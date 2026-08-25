@@ -1,7 +1,7 @@
 {
-  "name": "teacher-agent-skills",
-  "version": "0.1.0",
-  "description": "Teaching skills for handout authoring, material digitization, OCR, mathematical exposition, geometry generation, and olympiad problem solving.",
+  "name": "ta-skills",
+  "version": "0.2.0",
+  "description": "Reusable Agent Skills for teaching-material authoring, digitization, OCR, mathematical exposition, geometry generation, and olympiad problem solving.",
   "author": {
     "name": "YZDame",
     "url": "https://github.com/YZDame"
@@ -21,8 +21,8 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Teacher Agent Skills",
-    "shortDescription": "Reusable skills for teaching materials and mathematics workflows.",
+    "displayName": "TA Skills",
+    "shortDescription": "Practical skills for teacher agents and teaching assistants.",
     "longDescription": "Create teaching handouts, digitize source materials, run OCR, write mathematical exposition, generate geometry diagrams, and solve olympiad problems with reusable Agent Skills.",
     "developerName": "YZDame",
     "category": "Productivity",
