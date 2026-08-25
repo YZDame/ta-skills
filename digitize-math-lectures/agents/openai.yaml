@@ -1,0 +1,4 @@
+interface:
+  display_name: "Digitize Mathematics Materials"
+  short_description: "Convert lecture and exam PDFs into reviewable LaTeX"
+  default_prompt: "Use $digitize-math-lectures to extract, merge, draft, review, and approve these mathematics lectures or exam reference answers."

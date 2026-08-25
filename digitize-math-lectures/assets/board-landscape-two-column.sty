@@ -1,0 +1,106 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{board-landscape-two-column}[2026/07/21 Reusable landscape two-column board-note layout]
+
+\RequirePackage{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{eso-pic}
+\usetikzlibrary{calc}
+
+\newlength{\BoardGutter}
+\newlength{\BoardDividerWidth}
+\setlength{\BoardGutter}{18pt}
+\setlength{\BoardDividerWidth}{0.6pt}
+
+\def\BoardPaperWidth{650.88bp}
+\def\BoardPaperHeight{406.8bp}
+\def\BoardLeftMargin{20pt}
+\def\BoardRightMargin{20pt}
+\def\BoardTopMargin{15pt}
+\def\BoardBottomMargin{13pt}
+\def\BoardFontSize{9pt}
+\def\BoardBaselineSkip{10.2pt}
+\def\BoardDividerColor{black}
+\def\BoardSourceLabel{}
+
+\definecolor{BoardPink}{RGB}{229,132,170}
+\providecommand{\boardcyan}{cyan}
+\providecommand{\boardpink}{BoardPink}
+\providecommand{\boardtitle}[1]{{\Large\bfseries #1}\par\smallskip}
+\providecommand{\boardsection}[1]{{\bfseries #1}\par}
+
+\pgfkeys{
+  /board/.is family,
+  /board,
+  paper-width/.store in=\BoardPaperWidth,
+  paper-height/.store in=\BoardPaperHeight,
+  left/.store in=\BoardLeftMargin,
+  right/.store in=\BoardRightMargin,
+  top/.store in=\BoardTopMargin,
+  bottom/.store in=\BoardBottomMargin,
+  gutter/.code={\setlength{\BoardGutter}{#1}},
+  divider-width/.code={\setlength{\BoardDividerWidth}{#1}},
+  divider-color/.store in=\BoardDividerColor,
+  font-size/.store in=\BoardFontSize,
+  baseline-skip/.store in=\BoardBaselineSkip
+}
+
+\newcommand{\BoardApplyGeometry}{%
+  \geometry{
+    paperwidth=\BoardPaperWidth,
+    paperheight=\BoardPaperHeight,
+    left=\BoardLeftMargin,
+    right=\BoardRightMargin,
+    top=\BoardTopMargin,
+    bottom=\BoardBottomMargin
+  }%
+}
+
+\newcommand{\BoardSetup}[1]{%
+  \pgfkeys{/board,#1}%
+  \BoardApplyGeometry
+}
+
+\BoardApplyGeometry
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.4pt}
+
+\newcounter{boardcolumn}
+
+\newenvironment{boardpage}[1][]{%
+  \def\BoardSourceLabel{#1}%
+  \setcounter{boardcolumn}{0}%
+  \AddToShipoutPictureFG*{%
+    \begin{tikzpicture}[remember picture,overlay]
+      \draw[\BoardDividerColor,line width=\BoardDividerWidth]
+        ($(current page.north)+(0,-\BoardTopMargin)$)--
+        ($(current page.south)+(0,\BoardBottomMargin)$);
+      \ifx\BoardSourceLabel\@empty\else
+        \node[anchor=south east,font=\tiny,text=black!65]
+          at ($(current page.south east)+(-\BoardRightMargin,4pt)$)
+          {\BoardSourceLabel};
+      \fi
+    \end{tikzpicture}%
+  }%
+  \fontsize{\BoardFontSize}{\BoardBaselineSkip}\selectfont
+  \noindent\ignorespaces
+}{%
+  \par\clearpage
+}
+
+\newenvironment{boardcolumn}{%
+  \stepcounter{boardcolumn}%
+  \ifnum\value{boardcolumn}>2
+    \PackageError{board-landscape-two-column}{A boardpage accepts exactly two boardcolumn environments}{}
+  \fi
+  \begin{minipage}[t][\dimexpr\textheight-2\baselineskip\relax][t]{\dimexpr(\textwidth-\BoardGutter)/2\relax}%
+  \vspace{0pt}\ignorespaces
+}{%
+  \vfill
+  \end{minipage}%
+  \ifnum\value{boardcolumn}=1\hspace{\BoardGutter}\fi
+  \ignorespacesafterend
+}
+
+\endinput

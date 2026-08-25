@@ -1,0 +1,110 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tex/styles/bixiu-board}[2026/07/27 reusable layout template Board layout: landscape review pages]
+
+% Board layout reproduces the original handwritten board at 650.88 x 406.8 bp
+% with two columns separated by a vertical rule. Left column carries the
+% main teaching flow (chapter/section/subsection/text/math/lists); right
+% column carries whatever the source page put as marginalia (aside env).
+
+\RequirePackage[
+  paperwidth=650.88bp,
+  paperheight=406.8bp,
+  left=18pt,
+  right=18pt,
+  top=16pt,
+  bottom=14pt
+]{geometry}
+\RequirePackage{paracol}
+\RequirePackage{eso-pic}
+
+\pagestyle{empty}
+\setlength{\columnsep}{24pt}
+\setlength{\columnseprule}{0.35pt}
+\columnratio{0.5}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist{nosep,leftmargin=2em}
+
+% Chapter heading style. ctexart has no \chapter, so we provide one with
+% board-specific behaviour: the first chapter starts the new content; later
+% chapters close the current board page and begin a fresh one.
+\newif\ifbixiu@chapterseen
+\bixiu@chapterseenfalse
+\DeclareDocumentCommand{\chapter}{m}{%
+  \ifbixiu@chapterseen
+    \switchcolumn[0]*%
+    \clearpage
+  \else
+    \global\bixiu@chapterseentrue
+  \fi
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}%
+  \par\noindent
+  {\normalfont\huge\bfseries §\,\thechapter\quad #1}\par
+  \vspace{1.2em}%
+}
+
+\ctexset{
+  section = {
+    format = \normalfont\Large\bfseries,
+    name = {§\,}{},
+    number = \thesection,
+    aftername = \quad,
+    beforeskip = 0pt,
+    afterskip = 1em
+  },
+  subsection = {
+    format = \normalfont\large\bfseries,
+    name = {}{},
+    number = \chinese{subsection}、,
+    aftername = {},
+    beforeskip = 1.1em,
+    afterskip = .45em
+  }
+}
+
+% Each \section starts on a fresh board page (matching original board pages).
+\RenewDocumentCommand{\bixiu@sectionbreak}{}{%
+  \switchcolumn[0]*%
+  \clearpage
+}
+
+% semanticlecture enters/exits the two-column flow.
+\NewDocumentEnvironment{semanticlecture}{}{%
+  \begin{paracol}{2}%
+}{%
+  \end{paracol}%
+}
+
+% aside: in board layout the rhs column of paracol. The layout switches to
+% column 2, switches back when aside ends.
+\RenewDocumentEnvironment{aside}{}{%
+  \switchcolumn[1]%
+  \begingroup\small
+}{%
+  \par\endgroup
+  \switchcolumn[0]%
+}
+
+% Figure width: consult per-figure scale hint set in the figure catalogue
+% (figures/sources/figures-board-scales.tex); fall back to .96 of the
+% column when none was declared. Plain layout ignores this hint and uses
+% its own default ratio.
+\RenewDocumentCommand{\bixiu@renderfig}{m m}{%
+  \ifcsname bixiu@figScaleP#1F#2\endcsname
+    \edef\bixiu@figscale{\csname bixiu@figScaleP#1F#2\endcsname}%
+  \else
+    \def\bixiu@figscale{.96}%
+  \fi
+  \setlength{\bixiu@figurewidth}{\bixiu@figscale\linewidth}%
+  \bixiu@emitfig{#1}{#2}{\bixiu@figurewidth}%
+}
+
+% Page number in the lower-center footer of each board page.
+\AddToShipoutPictureFG{%
+  \AtPageLowerLeft{%
+    \makebox[\paperwidth][c]{\raisebox{7pt}{\scriptsize\thepage}}%
+  }%
+}
+
+\endinput

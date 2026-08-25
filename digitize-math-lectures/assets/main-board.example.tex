@@ -1,0 +1,20 @@
+\documentclass[10pt,UTF8,fontset=none]{ctexart}
+
+% Switch the whole document layout by changing one line:
+%   board: landscape two-column review pages (650.88 x 406.8 bp)
+%   plain: ordinary A4 ctexart article flow
+\providecommand{\LectureLayout}{board}
+\usepackage[\LectureLayout]{tex/styles/bixiu}
+
+% Vector figure catalogue + corrections + per-figure board width hints.
+\input{figures/sources/figures-full.tex}
+% \input{figures/sources/figures-NN-NN-corrections.tex}   % batch overrides as needed
+\input{figures/sources/figures-board-scales.tex}
+
+\begin{document}
+\begin{semanticlecture}
+  \input{tex/chapters/ch01-XXX.tex}
+  \input{tex/chapters/ch02-XXX.tex}
+  % ...
+\end{semanticlecture}
+\end{document}

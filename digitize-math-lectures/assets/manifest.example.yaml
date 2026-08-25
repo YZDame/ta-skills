@@ -1,0 +1,79 @@
+schema_version: 5
+project_id: example-lecture
+title: Example Mathematics Lecture Project
+profile: lecture-authoring      # board-digitization | lecture-authoring | hybrid | exam-answer-digitization
+state: NEW
+audience: High school students
+teaching_goal: ""
+approval_owner: ""
+
+# The template field is authoritative.
+#   - board-digitization: tex/styles/bixiu.sty
+#   - lecture-authoring: templates/evan-zh/evan.sty
+#   - hybrid: declare the choice according to the dominant component.
+#   - exam-answer-digitization: user-selected exam style, such as templates/TST/natoly.sty
+# Users may override it with any repository/project style path or CTAN package name.
+template: templates/evan-zh/evan.sty
+
+# Used only by the board-digitization profile.
+layout:
+  router: tex/styles/bixiu.sty
+  default: board
+  available: [board, plain]
+
+current_draft:
+  ownership: human_edited
+  tex: example-lecture.tex
+  pdf: example-lecture.pdf
+  status: PENDING
+  generator_may_overwrite: false
+
+sources:
+  - id: source-1
+    type: pdf
+    path: sources/source.pdf
+    sha256: ""
+    pages: 0
+    text_layer: false
+    allowed_use: lecture_generation
+
+paths:
+  sources: sources/
+  extraction: extraction/
+  content: content/
+  tex_chapters: tex/chapters/
+  tex_sets: tex/sets/                              # exam-answer-digitization only
+  tex_sections_legacy: tex/sections-legacy/      # Retired drafts for historical comparison
+  tex_styles: tex/styles/
+  figures: figures/
+  figures_sources: figures/sources/
+  review: review/
+  build_current: build/current/                  # Primary layout build cache
+  build_plain: build/plain/                      # Board-digitization only
+  archive: archive/
+  tools: tools/
+  approved_destination: lectures/YYYYMMDD-Lecture-Title/
+
+extraction:
+  benchmark_pages: []
+  primary: undecided
+  secondary_review: []
+
+content_layout_invariants:
+  chapters_forbidden: ["\\linewidth", "\\columnsep", "\\columnseprule",
+    "\\paperwidth", "\\paperheight", "paracol", "twocolumn",
+    "\\clearpage", "absolute-tikz-current-page"]
+  chapters_board_only_forbidden: ["\\lecturepage", "\\annotation",
+    "\\sourcefigure", "\\BoardText", "\\BoardEquation",
+    "\\BoardGraphic", "boardpage"]
+  figure_width_location: figures/sources/figures-board-scales.tex
+  template_authoritative_field: template
+
+review:
+  content: PENDING
+  figures: PENDING
+  source_code: PENDING
+  visual: PENDING
+  layout_board_build: PENDING      # Board-digitization only
+  layout_plain_build: PENDING      # Board-digitization only
+  layout_main_build: PENDING       # Lecture-authoring/hybrid

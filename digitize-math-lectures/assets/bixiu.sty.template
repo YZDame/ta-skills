@@ -1,0 +1,30 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tex/styles/bixiu}[2026/07/27 reusable layout template Cross-layout entry for bixiu board notes]
+
+% Router package. The main TeX file loads only this package with a layout
+% option:
+%
+%   \usepackage[layout=board]{tex/styles/bixiu}   % landscape review pages
+%   \usepackage[layout=plain]{tex/styles/bixiu}   % A4 article flow
+%
+% Content layer is always loaded first; exactly one layout layer is loaded
+% afterwards. Layouts may be added without touching the chapter sources.
+
+\newif\ifbixiu@board
+\newif\ifbixiu@plain
+
+\DeclareOption{board}{\bixiu@boardtrue\bixiu@plainfalse}
+\DeclareOption{plain}{\bixiu@plaintrue\bixiu@boardfalse}
+\ExecuteOptions{board}
+\ProcessOptions\relax
+
+\RequirePackage{tex/styles/bixiu-content}
+
+\ifbixiu@board
+  \RequirePackage{tex/styles/bixiu-board}
+\fi
+\ifbixiu@plain
+  \RequirePackage{tex/styles/bixiu-plain}
+\fi
+
+\endinput

@@ -1,0 +1,33 @@
+\documentclass[12pt,oneside,fontset=none]{ctexbook}
+
+\setCJKmainfont[
+  BoldFont=Heiti SC,
+  ItalicFont=Songti SC
+]{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
+
+% hidelinks is a hyperref option and must be passed before loading evan.
+\PassOptionsToPackage{hidelinks}{hyperref}
+
+% Recommended usage: ctexbook + evanchinese + sexy.
+%   evanchinese detects ctex document classes and avoids manual font setup.
+%   sexy = secthm + mdthm + colorsec, enabling the bundled styling.
+%
+% If the user chooses another template, replace the path below with the
+% value of the project.yaml.template field. Chapter content need not change.
+\usepackage[evanchinese, sexy]{templates/evan-zh/evan}
+
+\title{......}
+\author{......}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\input{tex/chapters/ch01-XXX.tex}
+\input{tex/chapters/ch02-XXX.tex}
+% ...
+\end{document}

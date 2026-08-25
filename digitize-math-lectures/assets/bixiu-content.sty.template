@@ -1,0 +1,149 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tex/styles/bixiu-content}[2026/07/27 reusable layout template Semantic content layer shared by all layouts]
+
+% This package is intentionally layout-free. It only provides:
+%   - common math/graphics/tikz packages and colors,
+%   - the figure-catalogue API used by the editable TikZ corpus,
+%   - the semantic names (\fig, aside, \asidetitle, \chapterreshook)
+%     whose rendering is decided by the layout layer (bixiu-board / bixiu-plain).
+%
+% Content files (tex/chapters/*.tex) MUST restrict themselves to the names
+% exposed here plus standard LaTeX/ctexart structures. Anything layout-
+% specific (page size, column count, displayed figure width, aside
+% placement, section break behaviour) lives in the layout layer.
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{mathtools}
+\RequirePackage{graphicx}
+\RequirePackage{xparse}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{enumitem}
+\RequirePackage{etoolbox}
+\RequirePackage{tabularx}
+\RequirePackage{booktabs}
+\usetikzlibrary{angles,arrows.meta,calc,decorations.pathreplacing,intersections,patterns,positioning,quotes}
+
+% CJK fonts: silent fallback when the workspace font is unavailable.
+\IfFontExistsTF{Songti SC}{%
+  \setCJKmainfont[ItalicFont=Songti SC]{Songti SC}
+  \setCJKsansfont{Heiti SC}
+  \setCJKmonofont{Songti SC}
+  \setmainfont[ItalicFont=Songti SC]{Songti SC}
+}{}
+
+\definecolor{BoardPink}{RGB}{229,132,170}
+\definecolor{PowerBlue}{RGB}{24,92,203}
+\definecolor{PowerGreen}{RGB}{91,164,43}
+\definecolor{PowerOrange}{RGB}{237,145,33}
+\definecolor{PowerPurple}{RGB}{136,78,160}
+
+% Figure catalogue API ---------------------------------------------------
+% \DefineBoardFigure{<page>}{<idx>}{<tikz body>} defines a vector drawing.
+% \DefineBoardFigureAspect{<page>}{<idx>}{<w/h>} declares its aspect ratio.
+% Both are persistent and global so figure source files may be input in any
+% order before the figures are referenced by \fig.
+\NewDocumentCommand{\DefineBoardFigure}{m m +m}{%
+  \expandafter\gdef\csname bixiu@figP#1F#2\endcsname{#3}%
+}
+\NewDocumentCommand{\DefineBoardFigureAspect}{m m m}{%
+  \expandafter\gdef\csname bixiu@figAspP#1F#2\endcsname{#3}%
+}
+% Optional display-width hint (board layout may consult; plain layout
+% ignores and uses its own default). Stored as a unitless multiplier of
+% the typesetting column's \linewidth (e.g. ".55").
+\NewDocumentCommand{\DefineBoardFigureScale}{m m m}{%
+  \expandafter\gdef\csname bixiu@figScaleP#1F#2\endcsname{#3}%
+}
+
+% Shared TikZ drawing primitives. These describe geometry, not layout, so
+% they belong to content rather than to any specific theme.
+\newcommand{\BoardBody}{\normalsize}
+\newcommand{\BoardSmall}{\small}
+\newcommand{\BoardTiny}{\scriptsize}
+\newcommand{\BoardHeading}{\large\bfseries}
+\newcommand{\BoardTitle}{\Large\bfseries}
+\newcommand{\BoardMath}{\normalsize}
+\tikzset{
+  board line/.style={draw=cyan,line width=.95pt},
+  board strong/.style={draw=cyan,line width=1.2pt},
+  board accent/.style={draw=BoardPink,line width=1.05pt},
+  board helper/.style={draw=cyan,line width=.65pt,densely dashed},
+  board label/.style={text=black,font=\BoardTiny,inner sep=1pt},
+  board pink label/.style={text=black,font=\BoardTiny,inner sep=1pt}
+}
+
+% Counter plumbing (chapter numbering, used by all layouts). In the
+% ctexart document class \chapter is normally undefined; the layout layer
+% (bixiu-board / bixiu-plain) defines it via \DeclareDocumentCommand.
+\@ifundefined{chapter}{%
+  \newcounter{chapter}%
+  \@addtoreset{section}{chapter}%
+}{}
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\chinese{subsection}}
+
+% Semantic names -------------------------------------------------------
+% The layout layer (\RequirePackage'd after this file by bixiu.sty)
+% installs concrete renderers. content.sty supplies a sane plain-style
+% default so an unloaded layout still produces a readable PDF.
+
+\newlength{\bixiu@figurewidth}
+
+% \fig{<page>}{<idx>} is the ONLY figure call from chapter content.
+\NewDocumentCommand{\fig}{m m}{\bixiu@renderfig{#1}{#2}}
+
+% Default renderer: centered box, never wider than 0.55\linewidth.
+% Layout layers override this with \RenewDocumentCommand.
+\NewDocumentCommand{\bixiu@renderfig}{m m}{%
+  \setlength{\bixiu@figurewidth}{.55\linewidth}%
+  \bixiu@emitfig{#1}{#2}{\bixiu@figurewidth}%
+}
+
+% Minimal TikZ wrapper used by both renderers. The aspect ratio is
+% catalogue-supplied; if missing, fall back to a dashed placeholder box.
+\NewDocumentCommand{\bixiu@emitfig}{m m m}{%
+  \begin{center}
+    \resizebox{#3}{!}{%
+      \ifcsname bixiu@figAspP#1F#2\endcsname
+        \edef\bixiu@figaspect{\csname bixiu@figAspP#1F#2\endcsname}%
+      \else
+        \PackageWarning{bixiu-content}{Missing aspect ratio for figure #1-#2; using 1.0}%
+        \def\bixiu@figaspect{1}%
+      \fi
+      \begin{tikzpicture}[x={\bixiu@figaspect pt},y=1pt,line cap=round,line join=round]
+        \path[use as bounding box] (0,0) rectangle (100,100);
+        \ifcsname bixiu@figP#1F#2\endcsname
+          \csname bixiu@figP#1F#2\endcsname
+        \else
+          \draw[BoardPink,dashed,line width=.8pt] (2,2) rectangle (98,98);
+          \node[align=center] at (50,50) {Figure #1--#2\\Vector review pending};
+        \fi
+      \end{tikzpicture}%
+    }
+  \end{center}
+}
+
+% aside environment conveys board-annotation semantics. Layout decides
+% placement: board mode switches to the right column, plain mode uses a
+% quote block, slides mode may suppress or sideline.
+\NewDocumentEnvironment{aside}{}{%
+  \par\medskip
+  \begingroup\small
+  \noindent\textbf{Annotation}\quad
+}{%
+  \par\endgroup\medskip
+}
+
+\NewDocumentCommand{\asidetitle}{m}{%
+  \par\smallskip\noindent{\bfseries #1}\par\smallskip
+}
+
+% Layouts may redefine \bixiu@sectionbreak to insert behaviour before each
+% \section (e.g. clearpage in board, paracol switch). Default: do nothing.
+\providecommand{\bixiu@sectionbreak}{}
+\pretocmd{\section}{\bixiu@sectionbreak}{}{}
+
+\endinput

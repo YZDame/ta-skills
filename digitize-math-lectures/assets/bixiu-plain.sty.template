@@ -1,0 +1,67 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tex/styles/bixiu-plain}[2026/07/27 reusable layout template Plain layout: A4 ctexart flow]
+
+% Plain layout drops the board-specific two-column review pages and renders
+% the same content as a normal A4 article. aside material becomes a quote
+% block, figures flow at .55 linewidth, sections no longer force page
+% breaks.
+
+\RequirePackage[a4paper,margin=2.5cm]{geometry}
+
+\pagestyle{empty}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\DeclareDocumentCommand{\chapter}{m}{%
+  \clearpage
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}%
+  \par\noindent
+  {\normalfont\huge\bfseries Chapter \thechapter\quad #1}\par
+  \vspace{1em}%
+}
+
+\ctexset{
+  section = {
+    format = \normalfont\Large\bfseries,
+    name = {§\,}{},
+    number = \thesection,
+    aftername = \quad,
+    beforeskip = 1.2em,
+    afterskip = .6em
+  },
+  subsection = {
+    format = \normalfont\large\bfseries,
+    name = {}{},
+    number = \chinese{subsection}、,
+    aftername = {},
+    beforeskip = .8em,
+    afterskip = .3em
+  }
+}
+
+% Do NOT force page breaks before \section in plain layout.
+\RenewDocumentCommand{\bixiu@sectionbreak}{}{}
+
+% semanticlecture is a no-op so plain builds still accept the same source.
+\NewDocumentEnvironment{semanticlecture}{}{}{}
+
+% aside: a labelled quote block, identical to the bixiu-content default but
+% redefined here so the layout owns its rendering.
+\RenewDocumentEnvironment{aside}{}{%
+  \par\medskip
+  \begingroup\small
+  \begin{quote}\noindent\textbf{Annotation}\quad
+}{%
+  \end{quote}
+  \endgroup
+  \par\medskip
+}
+
+\RenewDocumentCommand{\bixiu@renderfig}{m m}{%
+  \setlength{\bixiu@figurewidth}{.55\linewidth}%
+  \bixiu@emitfig{#1}{#2}{\bixiu@figurewidth}%
+}
+
+\endinput
