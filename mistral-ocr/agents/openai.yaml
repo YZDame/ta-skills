@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mistral OCR"
+  short_description: "OCR PDFs, scans, images, and document URLs"
+  default_prompt: "Use $mistral-ocr to OCR this document and save Markdown plus raw JSON."
