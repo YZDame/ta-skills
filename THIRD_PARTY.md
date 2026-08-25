@@ -1,6 +1,6 @@
 # Third-party content
 
-## `vendor-skills/math-olympiad`
+## `plugins/teacher-agent-skills/skills/math-olympiad`
 
 - Upstream: <https://github.com/anthropics/claude-plugins-official/tree/main/plugins/math-olympiad>
 - Upstream author: Anthropic

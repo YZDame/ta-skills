@@ -1,0 +1,21 @@
+{
+  "name": "teacher-agent-skills",
+  "description": "Teaching skills for handout authoring, material digitization, OCR, mathematical exposition, geometry generation, and olympiad problem solving.",
+  "version": "0.1.0",
+  "author": {
+    "name": "YZDame"
+  },
+  "homepage": "https://github.com/YZDame/ta-skills",
+  "repository": "https://github.com/YZDame/ta-skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "education",
+    "teaching",
+    "teacher-agent",
+    "teaching-assistant",
+    "latex",
+    "ocr",
+    "mathematics",
+    "geometry"
+  ]
+}

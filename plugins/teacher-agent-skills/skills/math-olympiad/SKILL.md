@@ -11,8 +11,12 @@ description:
   logic'. Outputs calibrated confidence — will say 'no confident solution'
   rather than bluff. If LaTeX is available, produces a clean PDF after
   verification passes."
-version: 0.1.0
 ---
+
+<!--
+Modified for ta-skills: removed the unsupported frontmatter version field so
+the upstream Skill validates against the current Agent Skills schema.
+-->
 
 # Math Olympiad Solver
 
