@@ -6,6 +6,8 @@
 
 TA Skills 将讲义制作、教学资料数字化、OCR、数学表达、几何图形生成和竞赛数学解题等工作整理成可复用的 [Agent Skills](https://agentskills.io/)；以 LaTeX 为核心材料，可以应用到几乎所有学科和教学场景。
 
+班级管理、学生成长记录和班主任工作流相关技能，可参见 [班主任.skill](https://github.com/YZDame/headteacher-skill)。
+
 ## 快速安装
 
 下面几种方式覆盖 Codex、Claude Code、Trae Work、WorkBuddy、豆包工作、千问办公和 DeepSeek Harness。选择哪一种，取决于当前 Agent 是否提供插件安装、Skills CLI 或本地 Skills 目录。
