@@ -1,6 +1,6 @@
 # TA Skills (Teacher Agent Skills)
 
-A practical collection of AI teaching-assistant skills for teachers.
+An AI teaching assistant for teachers: a practical teaching skills bundle.
 
 [中文](README.md)
 

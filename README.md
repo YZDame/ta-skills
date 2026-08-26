@@ -1,6 +1,6 @@
 # TA Skills（Teacher Agent Skills）
 
-面向教师的 AI 助教——一份实用教学技能集。
+面向教师的 AI 助教：一份实用教学技能包。
 
 [English](README.en.md)
 
