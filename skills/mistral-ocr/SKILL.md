@@ -1,7 +1,7 @@
 ---
 name: mistral-ocr
 description: >
-  Mistral OCR document processing for PDFs, scanned pages, images, and public document URLs. Use when Codex needs Mistral's OCR API, Markdown extraction with page structure, table formatting, block bounding boxes, confidence scores, or a raw JSON OCR response. Reads the key from MISTRAL_API_KEY, supports local PDF/image input with explicit cloud-upload consent, and saves deterministic Markdown plus JSON outputs. 中文触发：Mistral OCR、Mistral API、扫描件识别、PDF OCR、图片 OCR、文档 OCR、表格识别、版面识别。
+  Mistral OCR cloud document processing for PDFs, scanned pages, images, and public document URLs. Use when Codex needs Mistral's OCR API, Markdown extraction with page structure, table formatting, block bounding boxes, confidence scores, a raw JSON OCR response, or a cloud fallback after MinerU fails. Reads the key from MISTRAL_API_KEY, treats direct invocation or an authorized MinerU fallback as selected-document cloud-upload authorization, and saves deterministic Markdown plus JSON outputs. 中文触发：Mistral OCR、Mistral API、扫描件识别、PDF OCR、图片 OCR、文档 OCR、表格识别、版面识别、MinerU失败回退。
 ---
 
 # Mistral OCR
@@ -12,8 +12,9 @@ Use Mistral's official `POST https://api.mistral.ai/v1/ocr` endpoint through the
 
 - Python 3 is required. The bundled script has no third-party dependency.
 - The model default is `mistral-ocr-latest`.
-- Mistral is a cloud service. When the user explicitly invokes this Skill for OCR, treat that invocation as authorization to upload the selected input. Do not ask a separate privacy confirmation.
+- Mistral is a cloud service. Treat direct user invocation of this Skill, or invocation by the MinerU fallback rule, as authorization to upload the document input selected for the task. Do not ask a separate privacy confirmation.
 - Local PDF and image inputs are uploaded by default. Use `--no-upload` only when the user explicitly requests a local-only route; Mistral OCR cannot process a local file without sending it to the service.
+- Limit uploads to the selected document inputs. Never include unrelated files, credentials, private keys, environment files, or other secrets.
 - Do not promise that the API is free. Quotas, billing, retention, and availability come from the user's Mistral account.
 
 ## Configure the API key
@@ -43,7 +44,7 @@ Stop with a clear setup message when the variable is absent. Do not fall back to
 ## Workflow
 
 1. Identify the input. Local PDFs and common images are encoded as data URLs by the script; public URLs are sent as `document_url` or `image_url` based on their suffix. Use another approved parser for local DOCX/PPTX or formats that this script does not accept locally.
-2. Upload the selected input by default because the user explicitly invoked this Skill. Do not pause for another privacy question.
+2. Upload the selected input by default because the user invoked this Skill directly or the MinerU fallback selected it. Do not pause for another privacy question.
 3. Check `MISTRAL_API_KEY` without exposing it.
 4. Create an output directory. If the user gives no output path, use `~/Mistral-OCR/<name>_<hash>/`, where `<hash>` is the first six characters of the MD5 of the original input string. The script can generate this default.
 5. Run `scripts/mistral_ocr.py` and report the generated `content.md` and `response.json` paths.
@@ -99,11 +100,12 @@ Do not overwrite an existing output directory casually. Use a new deterministic 
 
 ## Selection rules
 
-- Use this skill when the user explicitly names Mistral OCR/API or asks for a Mistral second opinion.
+- Use this skill when the user explicitly names Mistral OCR/API, asks for a Mistral second opinion, or MinerU invokes it through its documented fallback rule.
 - Use it for difficult scans, mixed layouts, tables, or equations when `MISTRAL_API_KEY` is set; the explicit Skill invocation already authorizes cloud processing.
 - Respect `--no-upload` only when the user explicitly requests local-only processing; report that Mistral OCR cannot complete that request without uploading the document.
-- Keep sensitive/local-only material on a local or already-approved processing route.
+- Treat material as local-only only when the user explicitly says not to upload it; do not infer a no-upload restriction from the document topic or filename.
 - Do not silently substitute another OCR provider when Mistral is selected. If the key or network is unavailable, report the blocker and provide the exact environment setup command.
+- Do not fall back to a local OCR engine unless the user explicitly requests local OCR or prohibits cloud upload.
 - Treat OCR Markdown as an intermediate artifact. Verify equations, tables, page order, and figures before publishing or converting to LaTeX.
 
 ## Troubleshooting
