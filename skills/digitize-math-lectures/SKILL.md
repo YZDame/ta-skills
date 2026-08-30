@@ -57,7 +57,7 @@ Use `NEW -> EXTRACTED -> MERGED -> REVIEW_REQUIRED -> APPROVED`. Read [reference
 ### Stage 1: Extract to `EXTRACTED`
 
 1. Record each source's path, SHA-256 digest, page count, page dimensions, text-layer status, and privacy or copyright boundaries.
-2. Render representative pages and assess handwriting, formula density, column structure, and figure types.
+2. For multi-page sources, first render a low-resolution contact sheet or page-indexed montage and inspect it to identify representative or flagged pages; open only those pages at full resolution for detailed review. Assess handwriting, formula density, column structure, and figure types.
 3. Run OCR only on materials that need recognition. Extract reliable text layers, Markdown, or LaTeX directly.
 4. Compare OCR backends on three to five representative pages. Treat routing scores as hints; let actual samples determine the backend.
 5. Save immutable raw responses, page-level Markdown, images, input hashes, timings, and errors in `extraction/`. Do not polish content at this stage.
@@ -130,7 +130,7 @@ Read [references/figure-reconstruction.md](references/figure-reconstruction.md) 
 2. **Content:** Definitions, conditions, formulas, derivations, examples, and answers are checked; additions are clearly identified.
 3. **Figures:** Full pages have been checked for missed figures; every figure has semantics, a renderer, an editable source, or a documented reason to retain a bitmap.
 4. **Source code:** File responsibilities are clear, the main file is concise, unnecessary absolute positioning is absent, and chapter content has no forbidden layout commands.
-5. **Compilation:** Every required layout compiles twice with XeLaTeX without missing glyphs, undefined commands, or unexpected layout warnings.
+5. **Compilation:** Every required layout compiles twice with XeLaTeX without missing glyphs, undefined commands, or unexpected layout warnings. Before cleanup, inspect the build dependency records (such as `.fls` or `.fdb_latexmk`) and preserve every generated figure PDF referenced by the source; remove only known disposable intermediates.
 6. **Visual review:** Render every page and inspect clipping, overlap, formula breaks, text-figure proximity, and label legibility.
 7. **Approval:** Keep the project at `REVIEW_REQUIRED` until content, figures, source code, and visuals are all confirmed.
 

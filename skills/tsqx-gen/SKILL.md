@@ -114,7 +114,9 @@ In the author's current workspace, useful references include:
 - a `tsqx-compiler` repository containing compile/preview workflow and diagnostics behavior
 
 Treat those repositories as optional context, not required dependencies of this skill.
-Use `scripts/verify_tsqx_pipeline.py` for quick local validation when you have written a `.tsqx` file to disk.
+Resolve `scripts/verify_tsqx_pipeline.py` from this Skill's directory (or use an absolute path) and pass absolute input/output paths, or run it from the repository root; do not assume the current working directory contains `SKILLS/`.
+
+Before introducing a nontrivial combined color or line-style modifier, compile a one-line smoke-test fixture with the exact token sequence. Keep the combination only if that minimal fixture passes with the installed compiler, then run the full diagram pipeline.
 
 If compilation fails:
 
