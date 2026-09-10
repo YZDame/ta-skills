@@ -62,6 +62,14 @@ Each field must be `PENDING`, `REVIEW_REQUIRED`, or `APPROVED`. All four fields 
 - For geometry problems, reconstruct figures from the statement and original page with TSQX/`tsqx-gen` before considering another renderer. TikZ is reserved for non-geometric diagrams or documented exceptions.
 - Filter answer-page material that the user identifies as irrelevant (for example, score data on the first page) without inserting process notes into the finished document body.
 
+### `olympiad-solution-digitization`
+
+- Use source recovery plus `route-preserving-completion` for manuscripts, mixed images or PDFs, existing Markdown or TeX, and terse solution notes. Do not silently replace a viable route with a newly authored one.
+- Maintain the per-problem content contract in `content/`; keep those editorial fields out of the printed document.
+- Print `题目`, an optional short `思路`, and `解答` or `证明`. Add a brief comment only when it has genuine transfer value or the user requests one.
+- Apply the problem-type completeness checks and risk-triggered independent verification defined in [olympiad-solution-profile.md](olympiad-solution-profile.md).
+- Default to a compact answer booklet with visible answers and a retained student-version switch. The `template` field remains authoritative; `templates/TST/natoly.sty` is the workspace recommendation, not a content dependency.
+
 ## 4. Directory and stage contract
 
 | Location | State | Responsibility |
@@ -70,9 +78,9 @@ Each field must be `PENDING`, `REVIEW_REQUIRED`, or `APPROVED`. All four fields 
 | `extraction/` | `EXTRACTED` | OCR, parsing, page evidence, and immutable run records |
 | `content/` | `MERGED` | Merged, normalized teaching structure with provenance anchors |
 | `figures/` | From `MERGED` | Crops, manifest, semantic specifications, sources, and previews |
-| Root `.tex` and `.pdf` | `REVIEW_REQUIRED` | Human-owned review entry points; `exam-answer-digitization` may use `tex/main.tex` and its configured review PDF |
+| Root `.tex` and `.pdf` | `REVIEW_REQUIRED` | Human-owned review entry points; answer-digitization profiles may use `tex/main.tex` and their configured review PDF |
 | `tex/chapters/` | `REVIEW_REQUIRED` | Layout-independent chapter content |
-| `tex/sets/` | `REVIEW_REQUIRED` | One complete question-and-answer TeX file per exam set (`exam-answer-digitization` only) |
+| `tex/sets/` | `REVIEW_REQUIRED` | Coherent question-and-solution groups for exam-answer and olympiad-solution profiles |
 | `tex/styles/` | `REVIEW_REQUIRED` | Content, board, plain, and router style packages |
 | `tex/sections-legacy/` | As needed | Retired drafts for historical comparison |
 | `review/` | From `REVIEW_REQUIRED` | Content, figure, source-code, and visual review records |

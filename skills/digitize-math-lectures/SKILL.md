@@ -1,6 +1,6 @@
 ---
 name: digitize-math-lectures
-description: Convert handwritten boards, exam question and answer PDFs, GoodNotes PDFs, lecture manuscripts, scanned handouts, textbooks, existing Markdown or LaTeX, images, and spoken additions into well-structured, readable, traceable, and reviewable mathematics materials. Supports board digitization, exam-answer digitization, multi-source lecture authoring, OCR routing, semantic recovery of mathematical figures, vector reconstruction with TikZ, PGFPlots, TSQX, or Asymptote, LaTeX compilation, and layered review. The central design rule is strict separation of content from layout; chapter content describes teaching structure, while the user-selected style package determines presentation. Use this Skill to digitize legacy materials, rebuild ordinary handouts, author lectures from multiple sources, or establish a repeatable mathematics-material production pipeline.
+description: Convert handwritten boards, exam question and answer PDFs, competition-solution manuscripts, GoodNotes PDFs, lecture manuscripts, scanned handouts, textbooks, existing Markdown or LaTeX, images, and spoken additions into well-structured, readable, traceable, and reviewable mathematics materials. Supports board digitization, exam-answer digitization, olympiad-solution digitization, multi-source lecture authoring, OCR routing, route-preserving completion, semantic recovery of mathematical figures, vector reconstruction with TikZ, PGFPlots, TSQX, or Asymptote, LaTeX compilation, and layered review. Use this Skill for source-based recovery and digitization; use math-exposition-latex for newly authored articles or handouts without source-recovery requirements.
 ---
 
 # Digitize and Author Mathematics Lectures
@@ -21,6 +21,8 @@ Choose one **profile** in the project manifest and record the selected style pac
   - **Default template**: choose according to the dominant component: use the bixiu three-layer package when the source board dominates, and `templates/evan-zh/evan.sty` when newly authored lecture content dominates.
 - **`exam-answer-digitization`**: Convert question and answer PDFs into compact, reviewable electronic reference answers. Keep complete question stems and normalized solutions together in one file per exam set, while preserving source-page traceability and the distinction between OCR candidates and reviewed mathematics.
   - **Default template**: use the user-selected exam style package; in this workspace, `templates/TST/natoly.sty` is the current reference package. Read [references/exam-answer-profile.md](references/exam-answer-profile.md) before production.
+- **`olympiad-solution-digitization`**: Convert competition manuscripts, loose scans or images, PDFs, existing Markdown or TeX, or terse solution notes into printable student-ready solutions. Default to `route-preserving-completion`: retain a viable source route, supply consequential missing reasoning and conditions, and repair local errors locally. If the route fails or the source is insufficient, keep the item at `REVIEW_REQUIRED`; write a new route only when the user explicitly requests one.
+  - **Default template**: a compact answer-booklet style selected by `project.yaml.template`; in this workspace, prefer `templates/TST/natoly.sty`, with answers visible by default and the package's `noanswers` switch retained. Read [references/olympiad-solution-profile.md](references/olympiad-solution-profile.md) before production.
 
 The `template` field may contain a repository path, an absolute path, a CTAN package name, or a project-local relative path. Prefer a project-local copy for version control and approved distribution. Before production, record the audience, teaching goal, content scope, deliverable format, template path and version, permitted rewriting, and approval owner.
 
@@ -36,7 +38,7 @@ work/<project-id>/
 ├── content/                # Merged, normalized content with provenance anchors
 ├── tex/
 │   ├── chapters/           # Content layer: layout-independent TeX by chapter
-│   ├── sets/               # Exam-answer profile: one complete set per file
+│   ├── sets/               # Exam or olympiad-solution profile: one coherent set per file
 │   ├── styles/             # Project-local style packages, if any
 │   └── sections-legacy/    # Retired drafts for historical comparison
 ├── figures/
@@ -48,7 +50,7 @@ work/<project-id>/
 └── tools/                  # Project-specific scripts only when genuinely required
 ```
 
-The root `.tex` and `.pdf` must be actual human review files, not symlinks or deep copies; for `exam-answer-digitization`, the profile-specific `tex/main.tex` and configured review PDF are the equivalent entry points. Once created, the main draft belongs to human editing. Generators may write only to `extraction/`; they must not overwrite the review entry point, `content/`, `tex/chapters/`, `tex/sets/`, human-owned style copies, or `figures/sources/`. Do not create empty directories for unused stages.
+The root `.tex` and `.pdf` must be actual human review files, not symlinks or deep copies; for answer-digitization profiles, the profile-specific `tex/main.tex` and configured review PDF are the equivalent entry points. Once created, the main draft belongs to human editing. Generators may write only to `extraction/`; they must not overwrite the review entry point, `content/`, `tex/chapters/`, `tex/sets/`, human-owned style copies, or `figures/sources/`. Do not create empty directories for unused stages.
 
 ## 3. Advance through four stages
 
@@ -62,7 +64,7 @@ Use `NEW -> EXTRACTED -> MERGED -> REVIEW_REQUIRED -> APPROVED`. Read [reference
 4. Compare OCR backends on three to five representative pages. Treat routing scores as hints; let actual samples determine the backend.
 5. Save immutable raw responses, page-level Markdown, images, input hashes, timings, and errors in `extraction/`. Do not polish content at this stage.
 
-For `exam-answer-digitization`, use Mistral OCR as the primary PDF OCR route. Preserve the raw response and page-level output; use another OCR backend only as a documented fallback, and never silently substitute it when the user explicitly requests Mistral OCR.
+For `exam-answer-digitization`, use Mistral OCR as the primary PDF OCR route. Preserve the raw response and page-level output; use another OCR backend only as a documented fallback, and never silently substitute it when the user explicitly requests Mistral OCR. For `olympiad-solution-digitization`, select the OCR backend from source quality and user constraints, preserve the same raw evidence, and treat recognition only as extraction: OCR does not decide mathematical correctness or final wording.
 
 ### Stage 2: Merge to `MERGED`
 
@@ -87,14 +89,15 @@ For `exam-answer-digitization`, use Mistral OCR as the primary PDF OCR route. Pr
    ```
    Board display widths come from `figures/sources/figures-board-scales.tex`, not content files.
 8. For **exam-answer-digitization**, put the main file in `tex/main.tex`, set files in `tex/sets/`, and keep each set's complete question stem and solution in the same file. The selected answer style controls the visible-answer switch, which defaults to showing answers.
-9. For **lecture-authoring**, normally load `\\usepackage[evanchinese, sexy]{templates/evan-zh/evan}` or a project-local style. One layout is sufficient unless the user requests more.
-10. Put the main `.tex` and review PDF at the project root, chapters in `tex/chapters/`, styles in `tex/styles/`, figure sources in `figures/sources/`, and build caches in `build/`. The first complete draft remains `REVIEW_REQUIRED`.
+9. For **olympiad-solution-digitization**, keep private per-problem records in `content/`, put printable problem groups in `tex/sets/`, and write each problem as `题目 -> 思路（按需） -> 解答/证明`. Omit a separate idea for routine filling-in or mechanical calculation. Do not expose provenance, OCR, or completion-process fields in the finished body.
+10. For **lecture-authoring**, normally load `\\usepackage[evanchinese, sexy]{templates/evan-zh/evan}` or a project-local style. One layout is sufficient unless the user requests more.
+11. Put the main `.tex` and review PDF at the project root, chapters in `tex/chapters/`, styles in `tex/styles/`, figure sources in `figures/sources/`, and build caches in `build/`. The first complete draft remains `REVIEW_REQUIRED`.
 
 ### Stage 4: Approve to `APPROVED`
 
 1. Revise the draft from user or authorized-reviewer feedback.
 2. Confirm mathematical content, figure semantics, source code, and visual layout separately.
-3. **Compile by profile**: board profiles require board and plain layouts; lecture-authoring and hybrid require one layout unless more are requested. Each required layout must pass two consecutive XeLaTeX runs without `! ` errors, undefined commands, or newly introduced `Overfull/Underfull` warnings.
+3. **Compile by profile**: board profiles require board and plain layouts; lecture-authoring and hybrid require one layout unless more are requested; answer-digitization profiles require answer-visible and student versions when the selected template supports an answer switch. Each required output must pass two consecutive XeLaTeX runs without `! ` errors, undefined commands, or newly introduced `Overfull/Underfull` warnings.
 4. Publish a self-contained `.tex` project, required subfiles, editable figure sources, and PDF to `approved_destination`. In this workspace, the default destination is `lectures/YYYYMMDDChinese-Lecture-Title/`.
 5. Preserve `sources/`, `extraction/`, `content/`, `tex/sections-legacy/`, and review records. Do not overwrite process evidence with the approved draft.
 
@@ -106,7 +109,7 @@ Use this loop:
 
 - Check every OCR crop against its full page and recover small figures omitted near formulas or column edges.
 - Infer geometric relationships from the problem statement and context, never from hand-drawn proportions alone.
-- Prefer TSQX or TikZ for plane geometry; PGFPlots/TikZ for functions and statistical curves; TikZ for number lines, set diagrams, tables, and flowcharts; Asymptote for solid geometry and complex analytic diagrams. For `exam-answer-digitization`, every geometry-problem figure must begin with a semantic specification and a TSQX/`tsqx-gen` reconstruction attempt based on the problem statement and the original page. Use TikZ only for non-geometric diagrams or a documented, user-approved exception.
+- Prefer TSQX or TikZ for plane geometry; PGFPlots/TikZ for functions and statistical curves; TikZ for number lines, set diagrams, tables, and flowcharts; Asymptote for solid geometry and complex analytic diagrams. For answer-digitization profiles, every plane-geometry figure must begin with a semantic specification and a TSQX/`tsqx-gen` reconstruction attempt based on the problem statement and the original page. Use TikZ only for non-geometric diagrams or a documented, user-approved exception.
 - Keep photographs, screenshots, textured images, or semantically uncertain figures as bitmaps when appropriate. Do not invent relationships merely to make everything vector-based.
 - Produce a standalone source and preview for every figure before integration. Check mathematical correctness and labels before appearance and similarity.
 
@@ -136,7 +139,7 @@ Read [references/figure-reconstruction.md](references/figure-reconstruction.md) 
 
 ## 7. Deliver required artifacts
 
-- `project.yaml` with sources, profile, `template`, primary state, component review states, and `tex_chapters`/`tex_styles`/`build`/`approved_destination` fields;
+- `project.yaml` with sources, profile, `template`, primary state, component review states, and profile-appropriate `tex_chapters`/`tex_sets`/`tex_styles`/`build`/`approved_destination` fields;
 - extracted results, merged content, and a review-ready LaTeX draft;
 - profile-appropriate style packages or a recorded reference to the repository template;
 - chapter content files calling only the selected package's semantic API plus standard `ctexart`/`ctexbook` structure;

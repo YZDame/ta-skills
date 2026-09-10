@@ -1,7 +1,7 @@
-schema_version: 5
+schema_version: 6
 project_id: example-lecture
 title: Example Mathematics Lecture Project
-profile: lecture-authoring      # board-digitization | lecture-authoring | hybrid | exam-answer-digitization
+profile: lecture-authoring      # board-digitization | lecture-authoring | hybrid | exam-answer-digitization | olympiad-solution-digitization
 state: NEW
 audience: High school students
 teaching_goal: ""
@@ -12,6 +12,7 @@ approval_owner: ""
 #   - lecture-authoring: templates/evan-zh/evan.sty
 #   - hybrid: declare the choice according to the dominant component.
 #   - exam-answer-digitization: user-selected exam style, such as templates/TST/natoly.sty
+#   - olympiad-solution-digitization: compact answer style; templates/TST/natoly.sty is recommended in this workspace
 # Users may override it with any repository/project style path or CTAN package name.
 template: templates/evan-zh/evan.sty
 
@@ -42,7 +43,8 @@ paths:
   extraction: extraction/
   content: content/
   tex_chapters: tex/chapters/
-  tex_sets: tex/sets/                              # exam-answer-digitization only
+  problem_records: content/problem-records.yaml    # olympiad-solution-digitization only
+  tex_sets: tex/sets/                              # answer-digitization profiles
   tex_sections_legacy: tex/sections-legacy/      # Retired drafts for historical comparison
   tex_styles: tex/styles/
   figures: figures/

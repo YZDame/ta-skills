@@ -7,6 +7,8 @@ This directory provides templates that enforce strict separation between content
 | `board-digitization` | `tex/styles/bixiu.sty` (content + board + plain) | `main-board.example.tex` | Yes: `build/current` and `build/plain` |
 | `lecture-authoring` | `templates/evan-zh/evan.sty` | `main-evan.example.tex` | No: one layout is sufficient |
 | `hybrid` | Choose by dominant component | Either example | As required |
+| `exam-answer-digitization` | User-selected exam style; workspace reference: `templates/TST/natoly.sty` | `tex/main.tex` | Answer-visible and student versions when supported |
+| `olympiad-solution-digitization` | Compact answer style; workspace recommendation: `templates/TST/natoly.sty` | `tex/main.tex` | Answer-visible and student versions when supported |
 
 ## Files
 
@@ -26,6 +28,10 @@ Copy the four bixiu templates into a project's `tex/styles/` directory. Chapter 
 ## Lecture authoring
 
 Load `templates/evan-zh/evan.sty` or a project-local copy. Chapter files use its theorem, problem, solution, and figure APIs. Board-only APIs are disabled for this profile.
+
+## Competition solutions
+
+For `olympiad-solution-digitization`, keep per-problem editorial records in `content/` and printable groups in `tex/sets/`. The final body uses `题目`, optional `思路`, and `解答` or `证明`; processing notes remain outside the document. Read [../references/olympiad-solution-profile.md](../references/olympiad-solution-profile.md) before drafting. The project manifest selects the style package, so `natoly.sty` is a workspace recommendation rather than a required dependency.
 
 ## Verification
 
