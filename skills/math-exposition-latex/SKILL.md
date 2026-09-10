@@ -1,23 +1,25 @@
 ---
 name: math-exposition-latex
-description: Write polished Chinese LaTeX mini-papers and mini-lectures for high-school math competition teaching, concept explanations, blog posts, WeChat articles, and reusable lecture-note material. Use when Codex needs to turn a math concept, problem-solving method, proof idea, or coach's notes into a rigorous but readable exposition with LaTeX structure, examples, commentary, and references.
+description: Write polished Chinese LaTeX short handouts, mini-lectures, mini-papers, and technical notes for high-school mathematics and competition teaching. Use when Codex needs to author a concept explanation, problem-solving method, proof idea, article, or source-free teaching handout with rigorous, economical mathematical prose. Do not use for scanned manuscripts, OCR recovery, or paired question-and-answer PDFs; route those source-digitization tasks to digitize-math-lectures.
 ---
 
 # Math Exposition LaTeX
 
 ## Workflow
 
-Use this skill to produce Chinese mathematical exposition, not formal research papers. Optimize for a coach explaining a concept clearly to motivated high-school students or other teachers.
+Use this skill to author Chinese mathematical exposition, not to recover source documents or write formal research papers. Optimize for a coach explaining mathematics clearly to motivated high-school students or other teachers.
 
-1. Identify the topic, audience, and output target: student Q&A, classroom handout, competition mini-lecture, blog article, or WeChat long-form article.
-2. Choose one structure:
-   - Mini-paper: abstract, introduction, preliminaries, main ideas, proof/derivation, applications, conclusion, references.
-   - Mini-lecture: problem background, preliminaries, core technique, typical examples, method summary, references.
-   - Technical note: motivation, notation, key lemma, proof details, examples, appendix if computations are long.
-3. Write around the teaching logic: difficulty -> key observation -> method -> conclusion -> transfer.
-4. Keep proofs readable. Explain why a move is natural before executing algebra or transformations.
-5. Use examples with `题目`, `分析`, `解答`, and `点评`; add `方法提炼` when the transfer pattern matters.
-6. Finish with a compact summary: what the method is, when it applies, and how to recognize it.
+1. Check the task boundary. If the input is a scan, handwritten manuscript, OCR result, paired question-and-answer PDF, or source-faithful conversion request, use `digitize-math-lectures` instead.
+2. Identify the topic, audience, teaching goal, and output target.
+3. Choose one form:
+   - Short handout: a few problems or one method, written as `题目 -> 思路（按需） -> 解答/证明 -> 简短点评（按需）`.
+   - Mini-lecture: a complete teaching sequence with background, prerequisites only when needed, core technique, selected examples, and a useful summary.
+   - Mini-paper: article-style exposition with an argument, applications, and references.
+   - Technical note: motivation, notation, key lemma, proof details, examples, and an appendix only when computations require it.
+4. For a short handout, omit `思路` when the route is routine or mechanical. When included, use it only to state the decisive observation, construction, or method choice; do not repeat the solution.
+5. For longer forms, write around the actual teaching logic. Include an introduction, preliminaries, conclusion, or references only when they serve the document.
+6. Explain construction motives, key substitutions, non-obvious estimates, and easily misused conditions. Complete routine algebra directly.
+7. Remove transitions and commentary that do not advance the mathematics. Default to one natural method; add a second solution, method extraction, or broader extension only when requested or genuinely valuable.
 
 ## LaTeX Defaults
 
@@ -42,7 +44,7 @@ Only add packages when needed:
 
 ## Writing Rules
 
-Read `references/writing-framework.md` when drafting a full article, revising style, or checking section-level expectations.
+Read `references/writing-framework.md` when selecting a document form, drafting a full article, revising style, or checking section-level expectations.
 
 Follow these defaults:
 
@@ -54,6 +56,8 @@ Follow these defaults:
 - Avoid slogans, marketing language, and vague importance claims.
 - Avoid overusing "不是……而是……".
 - Prefer concrete titles such as `核心技巧`, `什么时候想到半角变形`, and `三类典型题`.
+- Do not manufacture `分析`, `点评`, `方法提炼`, or `总结回顾` merely to fill a template.
+- Keep every paragraph responsible for a mathematical action: set up an object, justify a step, derive a relation, close an argument, or state a reusable condition.
 
 ## Evan Template Guidance
 
@@ -61,7 +65,7 @@ Read `references/evan-template-notes.md` when the user asks for Evan Chen style,
 
 Default choice:
 
-- Short blog or WeChat article: use the standalone lightweight template.
+- Short handout, blog, or WeChat article: use the standalone lightweight template unless the user selects another style.
 - Longer competition lecture note: consider `templates/evan-zh/evan.sty`.
 - Problem-bank or VON integration: only use `von.sty` when the user explicitly wants LaTeX to pull from the problem database.
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Math Exposition LaTeX"
-  short_description: "Write Chinese math mini-lectures in LaTeX"
-  default_prompt: "Use $math-exposition-latex to turn this high-school math concept into a polished Chinese LaTeX mini-lecture."
+  short_description: "Author concise Chinese math handouts and expositions"
+  default_prompt: "Use $math-exposition-latex to author this high-school mathematics topic as an appropriately scoped Chinese LaTeX short handout, mini-lecture, mini-paper, or technical note."

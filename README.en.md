@@ -56,8 +56,8 @@ WorkBuddy, Doubao Work, and Qwen Office can import Skills through their Skills p
 
 | Skill | Purpose |
 | --- | --- |
-| [`digitize-math-lectures`](skills/digitize-math-lectures/) | Turn boards, exams, scans, PDFs, manuscripts, and existing LaTeX into editable teaching materials ready for review. |
-| [`math-exposition-latex`](skills/math-exposition-latex/) | Write Chinese mathematical explanations, proofs, competition handouts, and LaTeX teaching materials. |
+| [`digitize-math-lectures`](skills/digitize-math-lectures/) | Recover boards, exams, olympiad-solution manuscripts, scans, PDFs, lecture notes, and existing LaTeX as editable teaching materials ready for review. |
+| [`math-exposition-latex`](skills/math-exposition-latex/) | Author new Chinese short handouts, mini-lectures, expository articles, and technical notes. |
 | [`mistral-ocr`](skills/mistral-ocr/) | Use Mistral OCR with PDFs, scanned pages, images, and public document URLs. |
 | [`tsqx-gen`](skills/tsqx-gen/) | Generate and check TSQX geometry code from problems, images, or written descriptions. |
 
@@ -72,6 +72,20 @@ WorkBuddy, Doubao Work, and Qwen Office can import Skills through their Skills p
 [`mineru-ai`](vendor-skills/mineru-ai/) currently contains only its upstream link and installation notes. Its upstream repository does not provide clear redistribution terms, so this repository does not copy the complete Skill.
 
 See [THIRD_PARTY.md](THIRD_PARTY.md) for the provenance and licensing boundaries of all external content.
+
+## Workflow and Responsibilities
+
+| Work | Responsible Skill | Delivery boundary |
+| --- | --- | --- |
+| Reliable extraction from PDFs, scans, and images | [`mistral-ocr`](skills/mistral-ocr/) or another OCR Skill | Preserve raw responses and page-level candidates; do not decide mathematical correctness or final wording. |
+| Digitizing boards, manuscripts, and source materials | [`digitize-math-lectures`](skills/digitize-math-lectures/) | Recover and edit content, produce LaTeX deliverables, and manage review from `REVIEW_REQUIRED` to `APPROVED`. |
+| Pairing complete exam question and answer PDFs | `exam-answer-digitization` in `digitize-math-lectures` | Merge each complete set into a traceable electronic reference answer. |
+| Editing olympiad manuscripts, terse solutions, or mixed sources | `olympiad-solution-digitization` in `digitize-math-lectures` | Preserve and complete the source route by default, produce a compact answer booklet, and retain failed routes for review. |
+| Pure problem solving or high-risk solution verification | [`math-olympiad`](skills/math-olympiad/) | Solve or independently verify mathematics; do not own OCR, layout, or project delivery. |
+| Semantic reconstruction of plane geometry | [`tsqx-gen`](skills/tsqx-gen/) | Derive a semantic specification from the statement, then generate and check TSQX figures. |
+| Newly authored handouts, lectures, and articles | [`math-exposition-latex`](skills/math-exposition-latex/) | Select `short-handout`, `mini-lecture`, `mini-paper`, or `technical-note`; do not take over scan digitization. |
+
+Solutions and short handouts share a compact editorial style: state the problem, add one to five sentences of decisive strategy only when useful, then give the formal solution. Commentary appears only when it has genuine transfer value. OCR uncertainty, missing-source notes, and authored-completion records stay in the review trail rather than the student-facing document.
 
 ## Runtime Requirements
 

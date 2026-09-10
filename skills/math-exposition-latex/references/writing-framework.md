@@ -1,16 +1,34 @@
 # Chinese Math Exposition Framework
 
-Use this reference when drafting a full mini-paper or mini-lecture.
+Use this reference when choosing among a short handout, mini-lecture, mini-paper, or technical note, and when checking section-level expectations.
 
 ## Purpose
 
-Produce teaching-oriented mathematical exposition for high-school competition contexts. The result should be rigorous enough to reuse in lecture notes, but readable enough for blog posts, WeChat articles, and student Q&A.
+Produce teaching-oriented mathematical exposition for high-school competition contexts. The result should be rigorous enough to reuse in lecture notes and economical enough for a printed solution handout, while remaining readable for articles and student Q&A.
 
-The target style is exposition: structured like a compressed academic article, but motivated and pedagogical.
+Choose the amount of structure from the teaching task. A short handout should feel like edited mathematics, not a compressed academic article.
 
 ## Structures
 
 Use one of these structures unless the task clearly needs another one.
+
+### Short Worked-Solution Handout
+
+Use for a few problems or one focused method:
+
+```text
+题目
+思路（按需）
+解答 / 证明
+简短点评（按需）
+```
+
+- Omit `思路` for routine filling-in or mechanical calculations.
+- When present, keep `思路` to the decisive observation, construction, or method choice. Do not paraphrase the full solution.
+- Explain only consequential moves: construction motives, key substitutions, non-obvious estimates, and easily misused conditions.
+- Complete routine calculations directly.
+- Default to one natural solution. Add commentary only when it gives a reusable trigger, condition, or warning; one or two sentences usually suffice.
+- Do not require an introduction, preliminaries, summary, references, or method-extraction section.
 
 ### Standard Mini-Paper
 
@@ -113,7 +131,7 @@ Proofs should be rigorous and readable.
 
 ### Applications and Examples
 
-Use examples as method transfer, not decoration.
+Use examples as method transfer, not decoration. The labels below are available components, not a mandatory checklist.
 
 Recommended example block:
 
@@ -123,32 +141,34 @@ Recommended example block:
 \textbf{题目.}
 ...
 
-\textbf{分析.}
+\textbf{思路.} % omit when the route is routine
 ...
 
 \textbf{解答.}
 ...
 
-\textbf{点评.}
+\textbf{点评.} % omit unless it adds genuine transfer value
 ...
 ```
 
-For important transfer patterns, add:
+For a genuinely important transfer pattern, optionally add:
 
 ```latex
 \textbf{方法提炼.}
 ...
 ```
 
-Order examples from direct use to transformed use to competition-style synthesis.
+In a mini-lecture or mini-paper, order examples from direct use to transformed use to competition-style synthesis when that progression serves the teaching goal. A short handout need not manufacture this sequence.
 
-### Conclusion
+### Conclusion for Longer Forms
 
 Keep it short. Answer:
 
 1. What is the core method?
 2. What problems does it fit?
 3. How can students recognize it next time?
+
+Short handouts do not require a conclusion or per-problem review section.
 
 ### References
 
@@ -196,6 +216,8 @@ Avoid:
 - vague words such as `非常重要` without content;
 - AI-flavored metaphors;
 - bureaucratic phrases such as `赋能`, `闭环`, and `抓手`.
+- process narration about drafting, OCR, or what the document is about to do;
+- empty transitions that merely announce the next calculation.
 
 Prefer concrete explanatory sentences:
 
@@ -217,7 +239,7 @@ For high-school students, emphasize why the method appears, where mistakes happe
 
 For teachers, add `教学提示` when useful.
 
-For competition students, increase density and include trigger conditions, variants, comparisons with other methods, and faster contest approaches.
+For competition students, increase mathematical density and state trigger conditions. Add variants or comparisons only when they clarify method choice; do not generate them by default.
 
 ## Reference Authors and Works
 
