@@ -1,230 +1,47 @@
-# Chinese Math Exposition Framework
+# Textbook exposition conventions
 
-Use this reference when drafting a full mini-paper or mini-lecture.
+## Chapter organization
 
-## Purpose
+Start from a mathematical question and a concrete object. Introduce general definitions at the point where a calculation or extension motivates them. Order results by their proof dependencies. End with exercises or a compact formula table when useful; avoid a formula recap that duplicates the preceding chapter.
 
-Produce teaching-oriented mathematical exposition for high-school competition contexts. The result should be rigorous enough to reuse in lecture notes, but readable enough for blog posts, WeChat articles, and student Q&A.
+A typical sequence is: introductory problem → special case and proof → general construction → principal theorems → examples and geometric consequences → connections/limitations → exercises with separate answers. This is a flexible pattern, not a compulsory table of contents.
 
-The target style is exposition: structured like a compressed academic article, but motivated and pedagogical.
+## Definitions
 
-## Structures
+Specify the ambient set and parameters. State what is being defined before using its properties. Distinguish a definition from a characterization theorem. Set standing assumptions once, but repeat a hypothesis in a standalone theorem if omitting it changes the result.
 
-Use one of these structures unless the task clearly needs another one.
+Use consistent notation and distinguish points, vectors, coordinate triples, and scalar functions. For a nonhomogeneous quadratic, write f for the polynomial and G for its constant coefficient; use a different symbol for the polarized bilinear form.
 
-### Standard Mini-Paper
+## Theorems and proofs
 
-```latex
-\maketitle
+A theorem must be understandable independently of conversational context. State existence and uniqueness claims precisely. Specify finite real contact points where geometric arguments need them; specify C^1 or C^2 hypotheses when using implicit-function or Taylor theorems.
 
-\begin{abstract}
-...
-\end{abstract}
+Keep proof paragraphs short enough to expose the reasoning. Explain why an identity is useful, then derive it. Mark the step that uses a hypothesis. Use “反之” only when a converse is actually being proved. Avoid “显然” at the main difficulty.
 
-\section{引言}
-\section{预备知识}
-\section{核心方法}
-\section{应用}
-\section{总结}
-\section*{参考资料}
-```
+When invoking an advanced theorem, name it and state the portion required. It is acceptable to omit a proof outside the intended scope, but explicitly identify the omission. Never add an entire prerequisite chapter solely to avoid an honest invocation.
 
-### Lecture-Oriented
+Check whether the construction is local or global, whether an equation has finite solutions, and whether two objects coincide or genuinely degenerate. Put exceptional cases near the theorem rather than hiding them in the final notes.
 
-```latex
-\section{问题背景}
-\section{预备知识}
-\section{核心技巧}
-\section{典型例题}
-\section{方法小结}
-\section*{参考资料}
-```
+## Examples and exercises
 
-### Expository Article
+Prefer:
 
-```latex
-\section{引言}
-\section{预备知识}
-\section{核心知识与主要想法}
-\section{证明与推导}
-\section{应用举例}
-\section{总结与延伸}
-\section*{参考资料}
-```
+\begin{example}
+[Precise problem statement.]
+\end{example}
+\begin{proof}[解]
+[Calculation or argument.]
+\end{proof}
 
-Use an appendix only when long computations, classifications, or supplementary proofs would slow the main text.
+Use examples for direct application, interpretation, and boundary cases. Keep a figure adjacent to the reasoning it supports. Give a caption naming the relationship, not merely “示意图”.
 
-## Section Guidance
+Assign exercises that vary the object, test hypotheses, or transfer the method. Separate answers from statements. Verify numerical values and equations independently of prose; do not create routine implementation-mirroring software tests for a writing task.
 
-### Abstract
+## Editorial pass
 
-Write 3--6 sentences. Answer:
-
-1. What problem or concept is discussed?
-2. What core method is used?
-3. What will the reader be able to do afterward?
-
-Avoid promotional language. If a significance claim is needed, make it concrete.
-
-### Introduction
-
-Use the introduction to pose the problem, not to prove everything.
-
-Good sequence:
-
-1. Start from a natural question, representative problem, or common confusion.
-2. Name the student's likely obstacle.
-3. State what the article resolves.
-4. Briefly preview the structure.
-
-### Preliminaries
-
-Include only definitions, formulas, theorems, and notation actually used later.
-
-Avoid front-loading definitions that can be explained in context. Fix important notation early.
-
-### Core Method
-
-This is the main section. Use teaching names such as:
-
-- 核心方法
-- 核心技巧
-- 主要想法
-- 方法提炼
-- 关键观察
-
-Organize as:
-
-```text
-问题困难 -> 关键观察 -> 方法操作 -> 得到结论
-```
-
-Do not present formulas alone. Add one sentence before or after key transformations explaining why the move is natural.
-
-### Proofs and Derivations
-
-Proofs should be rigorous and readable.
-
-- Do not skip key transformations.
-- Do not compress all algebra into one line.
-- Avoid overusing `显然`, `易得`, and `不难发现`.
-- Explain steps where high-school readers are likely to get stuck.
-- Split long arguments into Step 1, Step 2, Step 3, or into `证明思路` and `正式证明`.
-
-### Applications and Examples
-
-Use examples as method transfer, not decoration.
-
-Recommended example block:
-
-```latex
-\subsection{例 1：标题}
-
-\textbf{题目.}
-...
-
-\textbf{分析.}
-...
-
-\textbf{解答.}
-...
-
-\textbf{点评.}
-...
-```
-
-For important transfer patterns, add:
-
-```latex
-\textbf{方法提炼.}
-...
-```
-
-Order examples from direct use to transformed use to competition-style synthesis.
-
-### Conclusion
-
-Keep it short. Answer:
-
-1. What is the core method?
-2. What problems does it fit?
-3. How can students recognize it next time?
-
-### References
-
-Do not use BibTeX by default. Use:
-
-```latex
-\section*{参考资料}
-
-\begin{enumerate}
-  \item 作者，资料名称，出版信息或网站信息，年份。
-  \item 链接：\url{https://example.com}
-\end{enumerate}
-```
-
-For webpages, include title, author or organization if available, and URL. Do not provide only bare links.
-
-## Math Typesetting
-
-- Inline math: `\(...\)`.
-- Display math: `\[...\]`.
-- Never use `$$...$$`.
-- Avoid `\boxed` unless the user explicitly wants boxed final answers.
-- Use `aligned` for multi-line calculations:
-
-```latex
-\[
-\begin{aligned}
-A
-&= B + C \\
-&= D.
-\end{aligned}
-\]
-```
-
-Use Chinese punctuation in Chinese prose. Formula internals follow mathematical convention.
-
-## Language Style
-
-The voice should be clear, restrained, rigorous, and teaching-friendly.
-
-Avoid:
-
-- slogan-like language;
-- motivational filler;
-- vague words such as `非常重要` without content;
-- AI-flavored metaphors;
-- bureaucratic phrases such as `赋能`, `闭环`, and `抓手`.
-
-Prefer concrete explanatory sentences:
-
-```text
-这个变形的作用是把未知角集中到同一个三角函数中。
-```
-
-Use direct section titles:
-
-```latex
-\section{从二倍角公式到半角公式}
-\section{什么时候想到半角变形}
-\section{三类典型题}
-```
-
-## Audience Adjustment
-
-For high-school students, emphasize why the method appears, where mistakes happen, and how it links to known knowledge.
-
-For teachers, add `教学提示` when useful.
-
-For competition students, increase density and include trigger conditions, variants, comparisons with other methods, and faster contest approaches.
-
-## Reference Authors and Works
-
-Useful style references:
-
-- George Polya, *How to Solve It*.
-- Paul R. Halmos, "How to Write Mathematics".
-- Donald E. Knuth, Tracy Larrabee, Paul M. Roberts, *Mathematical Writing*.
-- Evan Chen, *An Infinitely Large Napkin*.
-- Evan Chen, *Euclidean Geometry in Mathematical Olympiads*.
+- Replace “你记得基本正确” with a mathematical proposition and its assumptions.
+- Replace “本质上都相通” with an explicit chain of implications and its boundary.
+- Replace repetitive “关键在于/这说明/总结” sentences with the needed logical connection.
+- Use descriptive headings: 圆外点的切点弦、齐次化与极化、隐函数的切线.
+- Keep formula boxes for results the reader needs to locate; avoid framing every calculation.
+- Preserve useful intuition: explain the mathematical reason for a construction without addressing the reader as a chat participant.

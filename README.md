@@ -59,7 +59,7 @@ WorkBuddy、豆包工作和千问办公可以通过各自的技能页面导入�
 | Skill | 用途 |
 | --- | --- |
 | [`digitize-math-lectures`](skills/digitize-math-lectures/) | 将板书、试卷、扫描件、PDF、讲稿和已有 LaTeX 整理成可校对、可编辑的教学资料。 |
-| [`math-exposition-latex`](skills/math-exposition-latex/) | 编写中文数学讲解、证明、竞赛讲义和 LaTeX 教学材料。 |
+| [`math-exposition-latex`](skills/math-exposition-latex/) | 编写教材式中文数学讲义：规范定义、定理与证明，保留数学主线，提供 Evan 模板与 PDF 校验流程。 |
 | [`mistral-ocr`](skills/mistral-ocr/) | 使用 Mistral OCR 识别 PDF、扫描页、图片和公开文档链接。 |
 | [`tsqx-gen`](skills/tsqx-gen/) | 根据题目、图片或文字描述生成并检查 TSQX 几何图形代码。 |
 

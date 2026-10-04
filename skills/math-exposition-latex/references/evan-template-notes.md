@@ -1,73 +1,27 @@
-# Evan Template Notes for This Workspace
+# Evan template and portable compilation
 
-Use this reference when the user asks for Evan Chen style, a long competition handout, theorem boxes, or integration with an external LaTeX template collection.
+## Bundled compatible setup
 
-## Local Template Map
+Use assets/textbook-template.tex with assets/evan.sty. This style is Evan Chen's 2019 compatibility version with Chinese environment labels. Its source attribution is retained in the file. It uses thmtools and mdframed and is compatible with the tested TeX Live 2023 environment.
 
-The relevant templates in the author's broader LaTeX workspace are:
+Source: https://github.com/vEnhance/dotfiles/blob/main/texmf/tex/latex/evan/evan-legacy.sty
+Style guide: https://web.evanchen.cc/latex-style-guide.html
 
-- `templates/evan-zh/evan.sty`: Chinese-enhanced Evan-style package. Best for daily competition lecture notes, worked solutions, and training material. In another workspace, replace this path with the corresponding template location.
-- `templates/evan/evan.sty`: upstream Evan-style package. Use mainly for compatibility or reference.
-- `templates/evan/short-preamble.sty`: compact reference for the core package choices and theorem boxes.
-- `templates/TST/natoly.sty`: better for contest papers than exposition.
-- `templates/von/von.sty`: bridges the local problem database into LaTeX through PythonTeX; use only when explicitly needed.
+Copy the style next to the generated main file. Load:
 
-## When to Use `evan-zh`
+\documentclass[11pt,a4paper,fontset=fandol]{ctexart}
+\usepackage[sexy,noasy,noauthor,nofancy]{evan}
 
-Use `evan-zh` when the output is a longer handout, a contest-method note, or a document with many theorems/examples/remarks.
+Use the provided theorem, lemma, proposition, corollary, definition, example, remark, and exercise environments. Do not redefine them. The document can configure page margins and headers separately. Do not use the legacy `chinese` option; ctexart already handles Unicode Chinese through XeLaTeX.
 
-Typical pattern:
+Check macro names before adding commands: evan.sty already defines several common ones, including norm. Use a unique name or renew an existing macro deliberately.
 
-```latex
-\documentclass[12pt]{ctexart}
-\PassOptionsToPackage{hidelinks}{hyperref}
-\usepackage[evanchinese,sexy,noasy]{../templates/evan-zh/evan}
-```
+## Version and dependency selection
 
-Choose `noasy` unless the document actually contains Asymptote figures. This keeps compilation simpler.
+Do not call the compatibility version “the latest Evan template”. If the user asks for the current upstream version, retrieve and inspect it: newer versions may use keytheorems/tcolorbox rather than thmtools/mdframed. Select and report a compatible version honestly; do not silently emulate the appearance while claiming to use the package.
 
-Use `sexy` for longer documents where theorem boxes and richer section styling help navigation. Avoid it for short blog-like articles when a plain style is cleaner.
+Use kpsewhich to inspect ctexart.cls, xeCJK.sty, thmtools.sty, mdframed.sty and other actual dependencies. Detect fonts or use Fandol if present. On macOS, explicit Songti SC/Heiti SC can be chosen if available. Do not assume a repo-specific templates/evan-zh directory exists.
 
-## When to Use Lightweight `ctexart`
+Compile twice with XeLaTeX. Resolve glyph, overflow, and cross-reference issues and visually review the generated PDF. Fandol script warnings alone are not evidence of missing glyphs; inspect actual missing-character diagnostics and rendered pages.
 
-Use the standalone lightweight template for:
-
-- short concept explanations;
-- WeChat/blog posts;
-- student Q&A turned into a note;
-- material intended to be pasted into another document later.
-
-The lightweight template has fewer package interactions and is easier to reuse.
-
-## Mac Font Notes
-
-On this host, default CTeX macOS fonts can fail if `STHeiti` is unavailable. Prefer explicit fonts in standalone templates:
-
-```latex
-\documentclass[10pt,a4paper,fontset=none]{ctexart}
-\setCJKmainfont{Songti SC}
-\setCJKsansfont{Heiti SC}
-\setCJKmonofont{Songti SC}
-```
-
-Compile with `xelatex`.
-
-## Theorem and Example Style
-
-For short articles, simple theorem environments are enough:
-
-```latex
-\newtheorem{theorem}{定理}
-\newtheorem{lemma}{引理}
-\newtheorem{proposition}{命题}
-\newtheorem{example}{例}
-\newtheorem{remark}{注}
-```
-
-For long handouts using `evan-zh`, rely on its built-in theorem environments instead of redefining them.
-
-## VON and Problem Database
-
-Do not use `von.sty` for ordinary writing. Use it only when the user asks to pull problems from the local `problem-db/` inside LaTeX.
-
-For normal mini-lectures, copy or write the problem statement directly into the document.
+Keep template attribution in delivered sources. Do not include unused Asymptote, VON, or problem-bank integrations. Store temporary TeX distributions and font caches outside the skill; bundle only reusable source assets.

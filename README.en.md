@@ -57,7 +57,7 @@ WorkBuddy, Doubao Work, and Qwen Office can import Skills through their Skills p
 | Skill | Purpose |
 | --- | --- |
 | [`digitize-math-lectures`](skills/digitize-math-lectures/) | Turn boards, exams, scans, PDFs, manuscripts, and existing LaTeX into editable teaching materials ready for review. |
-| [`math-exposition-latex`](skills/math-exposition-latex/) | Write Chinese mathematical explanations, proofs, competition handouts, and LaTeX teaching materials. |
+| [`math-exposition-latex`](skills/math-exposition-latex/) | Write textbook-style Chinese mathematics notes with precise statements, proofs, examples, Evan templates, and PDF verification. |
 | [`mistral-ocr`](skills/mistral-ocr/) | Use Mistral OCR with PDFs, scanned pages, images, and public document URLs. |
 | [`tsqx-gen`](skills/tsqx-gen/) | Generate and check TSQX geometry code from problems, images, or written descriptions. |
 

@@ -1,4 +1,14 @@
 interface:
-  display_name: "Math Exposition LaTeX"
-  short_description: "Write Chinese math mini-lectures in LaTeX"
-  default_prompt: "Use $math-exposition-latex to turn this high-school math concept into a polished Chinese LaTeX mini-lecture."
+  display_name: 教材式数学讲义
+  short_description: 规范数学语言、完整证明与几何主线，生成可校验的 LaTeX 讲义和 PDF
+  default_prompt: 使用 $math-exposition-latex，把这个数学主题写成教材式讲义，保留主线，给出规范定义、定理、证明、例题与习题，并输出
+    PDF。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
