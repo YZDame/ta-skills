@@ -59,7 +59,7 @@ WorkBuddy、豆包工作和千问办公可以通过各自的技能页面导入�
 | Skill | 用途 |
 | --- | --- |
 | [`digitize-math-lectures`](skills/digitize-math-lectures/) | 将板书、试卷、竞赛题解手稿、扫描件、PDF、讲稿和已有 LaTeX 恢复为可校对、可编辑的教学资料。 |
-| [`math-exposition-latex`](skills/math-exposition-latex/) | 新写中文数学短讲义、专题讲义、文章式阐释和技术说明。 |
+| [`math-exposition-latex`](skills/math-exposition-latex/) | 编写教材式中文数学讲义，也支持短讲义、专题讲义、文章式阐释和技术说明。 |
 | [`mistral-ocr`](skills/mistral-ocr/) | 使用 Mistral OCR 识别 PDF、扫描页、图片和公开文档链接。 |
 | [`tsqx-gen`](skills/tsqx-gen/) | 根据题目、图片或文字描述生成并检查 TSQX 几何图形代码。 |
 
@@ -81,10 +81,7 @@ WorkBuddy、豆包工作和千问办公可以通过各自的技能页面导入�
 | --- | --- | --- |
 | PDF、扫描页和图片的可靠抽取 | [`mistral-ocr`](skills/mistral-ocr/) 或其他 OCR Skill | 留存原始结果和页级候选，不负责数学定稿。 |
 | 板书、讲稿和来源材料数字化 | [`digitize-math-lectures`](skills/digitize-math-lectures/) | 恢复材料、编辑内容、生成 LaTeX 成品，并管理 `REVIEW_REQUIRED` 到 `APPROVED` 的审核状态。 |
-| 成套试卷题目与答案配对 | `digitize-math-lectures` 的 `exam-answer-digitization` | 每套题目与答案合并为可追溯的电子版。 |
 | 竞赛手稿、简略题解或混合来源整理 | `digitize-math-lectures` 的 `olympiad-solution-digitization` | 默认保留原解法路线并补齐关键环节，输出紧凑题解册；原路线失效时保留待审。 |
-| 单纯求解或高风险题解复核 | [`math-olympiad`](skills/math-olympiad/) | 独立求解或数学验证，不负责 OCR、版式和项目交付。 |
-| 平面几何语义重建 | [`tsqx-gen`](skills/tsqx-gen/) | 从题意建立语义规格，生成并检查 TSQX 图形。 |
 | 新写短讲义、专题讲义和文章 | [`math-exposition-latex`](skills/math-exposition-latex/) | 按 `short-handout`、`mini-lecture`、`mini-paper` 或 `technical-note` 选用合适文体；不接管扫描材料数字化。 |
 
 题解和短讲义共享简洁的正文习惯：先放题目，必要时用一至五句话说明决定路线的思路，再给出规范解答；点评只在确有迁移价值时出现。OCR、缺页和补写过程留在审核记录中，不进入学生成品。
