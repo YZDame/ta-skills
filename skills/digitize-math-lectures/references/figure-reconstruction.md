@@ -6,7 +6,7 @@ A mathematical figure contains mathematical semantics, teaching purpose, and vis
 
 ## 2. Figure sources
 
-The manifest accepts three origins:
+When origin tracking is useful, distinguish:
 
 1. `source_crop`: a region automatically cropped by OCR or layout analysis;
 2. `full_page_recovered`: a figure found during full-page inspection that OCR missed;
@@ -28,7 +28,7 @@ Reject `false_crop`. Do not force `content_bitmap` or `ambiguous` candidates int
 
 ## 4. Semantic specification
 
-Write a `semantic_spec` before reconstructing any figure. YAML or JSON is recommended. Include at least:
+Establish objects, relations, labels, and ambiguities before reconstructing a figure. For a simple figure, source comments or a short working note suffice; a separate semantic file is optional. For complex figures, this working schema may help:
 
 ```yaml
 id: fig-01
@@ -80,8 +80,8 @@ A figure may combine tools, but keep one primary editable source entry point. Do
 2. Use stable, readable object names. Centralize colors, line widths, and font sizes.
 3. For function graphs, state the expression, domain, coordinate range, sampling, and key points.
 4. For geometry, state dependencies. Decorative offsets must not change mathematical conditions.
-5. Compile every figure separately to a PDF or SVG preview before integrating it into the lecture.
-6. Store source, preview, build log, and semantic specification in corresponding locations.
+5. Preview complex or uncertain figures separately before integration. Simple inline TikZ may be checked in the final document.
+6. Retain editable drawing sources and the figure assets required by the final TeX. Separate previews, logs, and semantic records may be temporary.
 
 ## 8. Mathematical checks
 
@@ -94,7 +94,7 @@ Check according to type:
 - table or flowchart: row and column meaning, arrow direction, branching conditions, and reading order;
 - solid geometry: occlusion, dashed and solid edges, projections, and hidden boundaries.
 
-Record results in `math_checks`. “Looks consistent” is not a mathematical check.
+Check the relations explicitly; a separate `math_checks` record is optional. “Looks consistent” is not a mathematical check.
 
 ## 9. Visual and pedagogical checks
 
@@ -112,7 +112,7 @@ For teaching value:
 - keep colors, line styles, and labels consistent across related figures;
 - split complex explanations into multiple teaching-stage figures when one figure would overload the reader.
 
-Record whether acceptance used source comparison, pedagogical review, or both.
+Use source comparison and pedagogical review as relevant; separate acceptance records are optional.
 
 ## 10. Failure handling
 

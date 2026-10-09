@@ -1,152 +1,61 @@
 ---
 name: digitize-math-lectures
-description: Convert handwritten boards, exam question and answer PDFs, competition-solution manuscripts, GoodNotes PDFs, lecture manuscripts, scanned handouts, textbooks, existing Markdown or LaTeX, images, and spoken additions into well-structured, readable, traceable, and reviewable mathematics materials. Supports board digitization, exam-answer digitization, olympiad-solution digitization, multi-source lecture authoring, OCR routing, route-preserving completion, semantic recovery of mathematical figures, vector reconstruction with TikZ, PGFPlots, TSQX, or Asymptote, LaTeX compilation, and layered review. Use this Skill for source-based recovery and digitization; use math-exposition-latex for newly authored articles or handouts without source-recovery requirements.
+description: Convert source mathematics PDFs, images, handwritten notes, or existing text into editable LaTeX and checked PDFs. Use for faithful transcription, source-based solution editing, or lecture adaptation; use math-exposition-latex for new writing without source recovery.
 ---
 
-# Digitize and Author Mathematics Lectures
+# Digitize Mathematics Materials
 
-Convert source materials into a clear, maintainable LaTeX project. Prioritize mathematical accuracy, teaching structure, and source quality. Do not mechanically imitate handwritten positions, font sizes, line breaks, or irregular whitespace. Keep original sources, machine extraction, merged content, review drafts, and approved deliverables distinguishable.
+Produce accurate, readable mathematics from supplied sources. Preserve the user's manual edits and chosen solution routes. Scale the workflow to the material; a two-page note does not need a publishing pipeline.
 
-**Highest-level design rule: separate content from layout strictly.** Chapter content files must not contain layout-specific commands such as width parameters, column counts or widths, forced `\\clearpage` breaks, `paracol`, `lecturepage`/`annotation`, absolute-position TikZ, or `twocolumn`. The style package controls layout; content describes teaching structure only. Record the style package in `project.yaml` under `template`.
+## Choose the editing task
 
-## 1. Select the project configuration
+Infer the task from the request; clarify only when the permitted rewriting is genuinely unclear.
 
-Choose one **profile** in the project manifest and record the selected style package in `project.yaml.template`. The profile determines defaults and the permitted degree of rewriting; users may explicitly override `template` in `project.yaml`.
+| Task | Editing boundary | Read when applicable |
+|---|---|---|
+| Faithful transcription | Recover the complete source; normalize notation and typesetting; mark uncertain content without inventing missing mathematics | [Exam pairing](references/exam-answer-profile.md) only for paired question/answer PDFs |
+| Solution editing | Preserve a viable source method, fill consequential missing steps and conditions, repair local errors; request new-route authorization when the source route fails | [Solution editing](references/olympiad-solution-profile.md) |
+| Lecture adaptation | Reorganize supplied material around the teaching goal; add explanations or examples within the requested scope | [Layout guidance](references/layout-separation.md) only for reusable or multiple layouts |
 
-- **`board-digitization`**: Digitize handwritten boards while preserving content order, source-page provenance, left/right column ownership, and text-figure relationships. Re-typeset in conventional LaTeX unless the user explicitly requests visual replication. Keep `source-faithful` only as a legacy alias.
-  - **Default/recommended template**: `tex/styles/bixiu.sty`, a three-layer content/board/plain architecture supplied in this Skill's `assets/`. This is the only profile that requires the three-layer package and compilation of both board and plain layouts.
-- **`lecture-authoring`**: Rework an ordinary lecture manuscript or create a new lecture from multiple sources. Chapters may be reorganized, notation normalized, derivations expanded, and figures redesigned.
-  - **Default template**: `templates/evan-zh/evan.sty`, compatible with `ctexbook`/`ctexart` and providing theorem, problem, and solution environments. Follow an explicit user choice of another style package.
-- **`hybrid`**: Preserve the core sequence and examples while reorganizing explanations, layout, or figures. Record what must remain and what may be rewritten.
-  - **Default template**: choose according to the dominant component: use the bixiu three-layer package when the source board dominates, and `templates/evan-zh/evan.sty` when newly authored lecture content dominates.
-- **`exam-answer-digitization`**: Convert question and answer PDFs into compact, reviewable electronic reference answers. Keep complete question stems and normalized solutions together in one file per exam set, while preserving source-page traceability and the distinction between OCR candidates and reviewed mathematics.
-  - **Default template**: use the user-selected exam style package; in this workspace, `templates/TST/natoly.sty` is the current reference package. Read [references/exam-answer-profile.md](references/exam-answer-profile.md) before production.
-- **`olympiad-solution-digitization`**: Convert competition manuscripts, loose scans or images, PDFs, existing Markdown or TeX, or terse solution notes into printable student-ready solutions. Default to `route-preserving-completion`: retain a viable source route, supply consequential missing reasoning and conditions, and repair local errors locally. If the route fails or the source is insufficient, keep the item at `REVIEW_REQUIRED`; write a new route only when the user explicitly requests one.
-  - **Default template**: a compact answer-booklet style selected by `project.yaml.template`; in this workspace, prefer `templates/TST/natoly.sty`, with answers visible by default and the package's `noanswers` switch retained. Read [references/olympiad-solution-profile.md](references/olympiad-solution-profile.md) before production.
+These tasks are independent of presentation. Board layout, exam grouping, answer hiding, and figure reconstruction are optional features, selected only when useful or requested. Existing `profile` values remain compatible: `board-digitization` / `source-faithful` normally mean transcription; `exam-answer-digitization` / `olympiad-solution-digitization` normally mean solution editing; `lecture-authoring` / `hybrid` normally mean adaptation. Explicit editing instructions take priority over these defaults.
 
-The `template` field may contain a repository path, an absolute path, a CTAN package name, or a project-local relative path. Prefer a project-local copy for version control and approved distribution. Before production, record the audience, teaching goal, content scope, deliverable format, template path and version, permitted rewriting, and approval owner.
+## Work with sources
 
-## 2. Use a minimal, self-explanatory project structure
+- Keep original PDFs, images, manuscripts, or other supplied source files unchanged under `work/<id>/sources/`. Existing project locations may be preserved.
+- Inspect the source structure and extract reliable text directly. Use OCR for scanned or handwritten content. Use the selected backend; compare alternatives on a small sample only when recognition quality is uncertain. Paired exam PDFs have an existing Mistral preference in the exam reference.
+- Keep machine extraction in `extraction/` during work. Never let OCR or bulk regeneration overwrite human-edited TeX or figure sources.
+- Check complete stems, conditions, formulas, source reading order, and text–figure relationships. Keep concise page comments when helpful; source hashes, inventories, and separate audit documents are optional.
+- Report specific unresolved issues in the handoff. Keep them visible in source comments when they still affect the draft; do not silently guess or insert processing narration into the student-facing text.
+
+## Write and check the material
+
+- Small material may use one root TeX file. Split by section or exam set only when it improves editing. Keep each question and its solution together unless instructed otherwise.
+- Respect a selected template. Workspace defaults are `evan-zh` for adapted lectures and `natoly` for compact answer booklets. Neither requires converting old projects.
+- Prefer shared style definitions for repeated layout choices. Ordinary figure widths and occasional page breaks are allowed; do not require a custom style architecture for a short document.
+- For board/plain switching, use the supplied bixiu templates if suitable; read [layout guidance](references/layout-separation.md). Build only requested deliverables. Answer-visible output is the answer-booklet default; retaining an existing answer switch does not require producing a second PDF.
+- When reconstructing figures, read [figure recovery](references/figure-reconstruction.md). Recover mathematical relations from the statement and full source page, not image proportions. Preserve editable drawing code: `.tsqx`, `.asy`, TikZ/PGFPlots `.tex`, or the tool's native source.
+- Check mathematical conditions and reasoning against the source. Substantial proof completion or repair warrants independent mathematical verification when available; simple transcription does not require an adversarial workflow.
+- Compile the requested outputs, resolving errors, missing glyphs/references, and layout defects that affect readability. Use latexmk or the needed number of passes; do not require a fixed two-run ritual. Inspect the actual PDF pages and figure labels. Harmless Underfull warnings alone do not fail delivery.
+- A compiled draft remains `REVIEW_REQUIRED` until the user or an authorized reviewer approves its content and figures. Communicating this status is sufficient for a small task; `project.yaml` and separate component reports are optional. See [project and retention contract](references/pipeline-contract.md) for larger or existing projects.
+
+## Retain originals and final editable materials
+
+Default lasting package:
 
 ```text
-work/<project-id>/
-├── <lecture-title>.tex     # Current human-reviewed main file
-├── <lecture-title>.pdf     # Current compiled review draft
-├── project.yaml            # Configuration, sources, state, template, and file index
-├── sources/                # Immutable source materials
-├── extraction/             # OCR, parsing, timestamps, and machine candidates
-├── content/                # Merged, normalized content with provenance anchors
-├── tex/
-│   ├── chapters/           # Content layer: layout-independent TeX by chapter
-│   ├── sets/               # Exam or olympiad-solution profile: one coherent set per file
-│   ├── styles/             # Project-local style packages, if any
-│   └── sections-legacy/    # Retired drafts for historical comparison
-├── figures/
-│   ├── sources/            # Figure sources, corrections, and board scales
-│   └── manifest.yaml
-├── review/                 # Content, figure, source-code, and visual review records
-├── build/                  # Compilation cache; board profiles commonly use current/plain
-├── archive/                # Superseded pilots or drafts, when needed
-└── tools/                  # Project-specific scripts only when genuinely required
+work/<id>/
+├── sources/             # Original PDFs, images, and other supplied files
+├── <title>.tex          # Main editable document
+├── <title>.pdf          # Checked output (review status communicated separately)
+├── sections/            # Only if the main file uses subfiles
+├── figures/             # TSQX, Asymptote, TikZ, etc. and required figure assets
+└── styles/              # Only required project-local dependencies
 ```
 
-The root `.tex` and `.pdf` must be actual human review files, not symlinks or deep copies; for answer-digitization profiles, the profile-specific `tex/main.tex` and configured review PDF are the equivalent entry points. Once created, the main draft belongs to human editing. Generators may write only to `extraction/`; they must not overwrite the review entry point, `content/`, `tex/chapters/`, `tex/sets/`, human-owned style copies, or `figures/sources/`. Do not create empty directories for unused stages.
+Use existing `tex/`, chapter, or figure paths when maintaining a project; do not reorganize merely to match this example. Final material includes all TeX subfiles, editable figure sources, required figure PDFs/images, and local styles/data needed to reproduce the requested PDF. Keep both TSQX and its generated Asymptote source when they form the delivered drawing chain. Inline TikZ in a retained TeX file is sufficient. Preserve SyncTeX where the workspace requires it.
 
-## 3. Advance through four stages
+OCR responses, page renders, merged Markdown, temporary previews, build caches, draft archives, per-problem records, and review reports may be used during processing but are not required lasting deliverables. Do not create unused directories or mandatory manifests. Keep process notes out of the printed body.
 
-Use `NEW -> EXTRACTED -> MERGED -> REVIEW_REQUIRED -> APPROVED`. Read [references/pipeline-contract.md](references/pipeline-contract.md) for complete definitions.
+After checking the PDF, clean known auxiliary files with the project's build tool (`latexmk -c` in this workspace). Before removing any other current-run intermediate, inspect actual dependencies and retain unresolved evidence until its issue is resolved. If an artifact's role is uncertain, keep it and report it. This retention policy does not authorize deleting pre-existing files, prior work, or manually edited material. Never use blanket `git clean`, `reset --hard`, extension-based deletion, or `latexmk -C` as delivery cleanup.
 
-### Stage 1: Extract to `EXTRACTED`
-
-1. Record each source's path, SHA-256 digest, page count, page dimensions, text-layer status, and privacy or copyright boundaries.
-2. For multi-page sources, first render a low-resolution contact sheet or page-indexed montage and inspect it to identify representative or flagged pages; open only those pages at full resolution for detailed review. Assess handwriting, formula density, column structure, and figure types.
-3. Run OCR only on materials that need recognition. Extract reliable text layers, Markdown, or LaTeX directly.
-4. Compare OCR backends on three to five representative pages. Treat routing scores as hints; let actual samples determine the backend.
-5. Save immutable raw responses, page-level Markdown, images, input hashes, timings, and errors in `extraction/`. Do not polish content at this stage.
-
-For `exam-answer-digitization`, use Mistral OCR as the primary PDF OCR route. Preserve the raw response and page-level output; use another OCR backend only as a documented fallback, and never silently substitute it when the user explicitly requests Mistral OCR. For `olympiad-solution-digitization`, select the OCR backend from source quality and user constraints, preserve the same raw evidence, and treat recognition only as extraction: OCR does not decide mathematical correctness or final wording.
-
-### Stage 2: Merge to `MERGED`
-
-1. Combine OCR batches and multiple sources while preserving source and page or paragraph anchors.
-2. Repair reading order, line breaks, duplicated passages, and obvious formatting noise. Mark uncertain text or formulas explicitly.
-3. Organize sections, definitions, theorems, examples, derivations, and supplementary explanations according to the selected profile.
-4. Distinguish source text, normalized content, and newly authored explanation.
-5. Write merged content to `content/`. Build the figure manifest and complete semantic recovery, renderer selection, and standalone previews. Read [references/figure-reconstruction.md](references/figure-reconstruction.md) whenever figures are involved.
-
-### Stage 3: Draft to `REVIEW_REQUIRED`
-
-1. Produce a three-to-five-page pilot or one complete section first. Confirm structure, type size, color, figure style, and template.
-2. **Keep content and layout separate when writing chapters.** Read [references/layout-separation.md](references/layout-separation.md).
-3. Put chapters in `tex/chapters/chNN-title.tex`, split by `\\chapter`/`\\section`/`\\subsection`, not by source-board page number.
-4. Chapter content must not contain `\\linewidth`/`\\columnsep`, `lecturepage`/`annotation`/`twocolumn`/`paracol`, forced `\\clearpage`, absolute-position TikZ nodes, or retired commands such as `\\sourcefigure`, `\\BoardText`, `\\BoardEquation`, `\\BoardGraphic`, and `boardpage`.
-5. For **board-digitization**, use `\\fig{page}{figure}` without a width, `aside`/`\\asidetitle`, and `% source board page N` anchors. These semantic names come from `bixiu-content.sty`.
-6. For **lecture-authoring**, use theorem, `problem`, `soln`, and standard sectioning environments supplied by `evan.sty`. For **hybrid**, declare the rule set used by each chapter.
-7. For **board-digitization**, require `bixiu-content.sty`, `bixiu-board.sty`, `bixiu-plain.sty`, and the `bixiu.sty` router. Switch layouts with:
-   ```latex
-   \\providecommand{\\LectureLayout}{board}   % board / plain
-   \\usepackage[\\LectureLayout]{tex/styles/bixiu}
-   ```
-   Board display widths come from `figures/sources/figures-board-scales.tex`, not content files.
-8. For **exam-answer-digitization**, put the main file in `tex/main.tex`, set files in `tex/sets/`, and keep each set's complete question stem and solution in the same file. The selected answer style controls the visible-answer switch, which defaults to showing answers.
-9. For **olympiad-solution-digitization**, keep private per-problem records in `content/`, put printable problem groups in `tex/sets/`, and write each problem as `题目 -> 思路（按需） -> 解答/证明`. Omit a separate idea for routine filling-in or mechanical calculation. Do not expose provenance, OCR, or completion-process fields in the finished body.
-10. For **lecture-authoring**, normally load `\\usepackage[evanchinese, sexy]{templates/evan-zh/evan}` or a project-local style. One layout is sufficient unless the user requests more.
-11. Put the main `.tex` and review PDF at the project root, chapters in `tex/chapters/`, styles in `tex/styles/`, figure sources in `figures/sources/`, and build caches in `build/`. The first complete draft remains `REVIEW_REQUIRED`.
-
-### Stage 4: Approve to `APPROVED`
-
-1. Revise the draft from user or authorized-reviewer feedback.
-2. Confirm mathematical content, figure semantics, source code, and visual layout separately.
-3. **Compile by profile**: board profiles require board and plain layouts; lecture-authoring and hybrid require one layout unless more are requested; answer-digitization profiles require answer-visible and student versions when the selected template supports an answer switch. Each required output must pass two consecutive XeLaTeX runs without `! ` errors, undefined commands, or newly introduced `Overfull/Underfull` warnings.
-4. Publish a self-contained `.tex` project, required subfiles, editable figure sources, and PDF to `approved_destination`. In this workspace, the default destination is `lectures/YYYYMMDDChinese-Lecture-Title/`.
-5. Preserve `sources/`, `extraction/`, `content/`, `tex/sections-legacy/`, and review records. Do not overwrite process evidence with the approved draft.
-
-## 4. Reconstruct mathematical figures
-
-Use this loop:
-
-`full-page inspection -> false-crop removal -> semantic specification -> renderer selection -> standalone compilation -> mathematical review -> visual and pedagogical review -> integration`
-
-- Check every OCR crop against its full page and recover small figures omitted near formulas or column edges.
-- Infer geometric relationships from the problem statement and context, never from hand-drawn proportions alone.
-- Prefer TSQX or TikZ for plane geometry; PGFPlots/TikZ for functions and statistical curves; TikZ for number lines, set diagrams, tables, and flowcharts; Asymptote for solid geometry and complex analytic diagrams. For answer-digitization profiles, every plane-geometry figure must begin with a semantic specification and a TSQX/`tsqx-gen` reconstruction attempt based on the problem statement and the original page. Use TikZ only for non-geometric diagrams or a documented, user-approved exception.
-- Keep photographs, screenshots, textured images, or semantically uncertain figures as bitmaps when appropriate. Do not invent relationships merely to make everything vector-based.
-- Produce a standalone source and preview for every figure before integration. Check mathematical correctness and labels before appearance and similarity.
-
-Read [references/figure-reconstruction.md](references/figure-reconstruction.md) for manifest fields, semantic specifications, renderer choices, and acceptance checks.
-
-## 5. Maintain readable LaTeX sources
-
-- Make source structure reflect lecture structure rather than OCR coordinates.
-- Keep the main file limited to document setup and `\\input` statements.
-- Content/layout separation is non-negotiable: widths, column counts, `\\columnseprule`, `paracol`, and page anchors do not belong in chapter content.
-- Prefer paragraphs, `enumerate`, `itemize`, `align`, theorem environments, and reusable macros. Avoid absolute-position nodes for each line of text.
-- Never let generated drafts overwrite human-edited drafts.
-- Use filenames that describe content or stage; keep `final-final2`, hashes, and opaque abbreviations out of review drafts.
-- Keep comments only when they explain something useful. Remove generator noise and duplicated style definitions.
-- In Chinese technical prose, use the solid full stop `．` consistently instead of mixing it with `。`.
-- Board digitization may map one source page to one logical page for review, but output pagination and line spacing should follow LaTeX readability. Match physical coordinates only when explicitly requested.
-
-## 6. Apply layered acceptance checks
-
-1. **Extraction:** Sources and page anchors are complete, raw results are traceable, and uncertainties are marked.
-2. **Content:** Definitions, conditions, formulas, derivations, examples, and answers are checked; additions are clearly identified.
-3. **Figures:** Full pages have been checked for missed figures; every figure has semantics, a renderer, an editable source, or a documented reason to retain a bitmap.
-4. **Source code:** File responsibilities are clear, the main file is concise, unnecessary absolute positioning is absent, and chapter content has no forbidden layout commands.
-5. **Compilation:** Every required layout compiles twice with XeLaTeX without missing glyphs, undefined commands, or unexpected layout warnings. Before cleanup, inspect the build dependency records (such as `.fls` or `.fdb_latexmk`) and preserve every generated figure PDF referenced by the source; remove only known disposable intermediates.
-6. **Visual review:** Render every page and inspect clipping, overlap, formula breaks, text-figure proximity, and label legibility.
-7. **Approval:** Keep the project at `REVIEW_REQUIRED` until content, figures, source code, and visuals are all confirmed.
-
-## 7. Deliver required artifacts
-
-- `project.yaml` with sources, profile, `template`, primary state, component review states, and profile-appropriate `tex_chapters`/`tex_sets`/`tex_styles`/`build`/`approved_destination` fields;
-- extracted results, merged content, and a review-ready LaTeX draft;
-- profile-appropriate style packages or a recorded reference to the repository template;
-- chapter content files calling only the selected package's semantic API plus standard `ctexart`/`ctexbook` structure;
-- a figure manifest, semantic specifications, editable sources, board-only scale files where applicable, and previews;
-- content, figure, source-code, and visual review records;
-- after approval, a self-contained editable project and PDF in `approved_destination`.
-
-## Completion rule
-
-Successful OCR, PDF compilation, or vectorization is only a partial result. Mark the first complete draft `REVIEW_REQUIRED`. Mark the project `APPROVED` only after the user or an authorized reviewer confirms mathematical content, figures, source code, and layout. Compilation success is not sufficient for approval.
+Approval permits a lean final copy under the workspace's lecture destination. Original materials remain preserved under `work/<id>/sources/`; avoid duplicating them into the published package unless requested. OCR or compilation alone is never content approval.

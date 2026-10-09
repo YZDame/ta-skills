@@ -1,14 +1,14 @@
 # Layout Templates and Project Examples
 
-This directory provides templates that enforce strict separation between content and layout. The default template is selected by `profile`, and users may override it explicitly in `project.yaml.template`. See [../references/layout-separation.md](../references/layout-separation.md) and [../SKILL.md](../SKILL.md).
+This directory provides optional templates for reusable content and layout. Use the selected editing task and requested outputs; existing profiles remain compatible and project.yaml is optional. See [../references/layout-separation.md](../references/layout-separation.md) and [../SKILL.md](../SKILL.md).
 
 | Profile | Default template | Main-entry example | Multiple layouts |
 |---|---|---|---|
-| `board-digitization` | `tex/styles/bixiu.sty` (content + board + plain) | `main-board.example.tex` | Yes: `build/current` and `build/plain` |
+| `board-digitization` | `tex/styles/bixiu.sty` (content + board + plain) | `main-board.example.tex` | Only when both are requested |
 | `lecture-authoring` | `templates/evan-zh/evan.sty` | `main-evan.example.tex` | No: one layout is sufficient |
 | `hybrid` | Choose by dominant component | Either example | As required |
-| `exam-answer-digitization` | User-selected exam style; workspace reference: `templates/TST/natoly.sty` | `tex/main.tex` | Answer-visible and student versions when supported |
-| `olympiad-solution-digitization` | Compact answer style; workspace recommendation: `templates/TST/natoly.sty` | `tex/main.tex` | Answer-visible and student versions when supported |
+| `exam-answer-digitization` | User-selected exam style; workspace reference: `templates/TST/natoly.sty` | `tex/main.tex` | Student version only when requested |
+| `olympiad-solution-digitization` | Compact answer style; workspace recommendation: `templates/TST/natoly.sty` | `tex/main.tex` | Student version only when requested |
 
 ## Files
 
@@ -23,7 +23,7 @@ This directory provides templates that enforce strict separation between content
 
 ## Board digitization
 
-Copy the four bixiu templates into a project's `tex/styles/` directory. Chapter files use `\\fig{page}{figure}`, `aside`, and source-page comments. Figure widths belong in `figures/sources/figures-board-scales.tex`. Compile both board and plain layouts.
+Copy the four bixiu templates into a project's `tex/styles/` directory. Chapter files use `\\fig{page}{figure}`, `aside`, and source-page comments. Figure widths belong in `figures/sources/figures-board-scales.tex`. Compile the requested layouts.
 
 ## Lecture authoring
 
@@ -31,8 +31,10 @@ Load `templates/evan-zh/evan.sty` or a project-local copy. Chapter files use its
 
 ## Competition solutions
 
-For `olympiad-solution-digitization`, keep per-problem editorial records in `content/` and printable groups in `tex/sets/`. The final body uses `题目`, optional `思路`, and `解答` or `证明`; processing notes remain outside the document. Read [../references/olympiad-solution-profile.md](../references/olympiad-solution-profile.md) before drafting. The project manifest selects the style package, so `natoly.sty` is a workspace recommendation rather than a required dependency.
+For `olympiad-solution-digitization`, use optional working records for difficult problems and split printable groups only when useful. The final body uses `题目`, optional `思路`, and `解答` or `证明`; processing notes remain outside the document. Read [../references/olympiad-solution-profile.md](../references/olympiad-solution-profile.md) before drafting. The user-selected template (or optional manifest) selects the style package, so `natoly.sty` is a workspace recommendation rather than a required dependency.
 
 ## Verification
 
-Each required layout must pass two consecutive XeLaTeX runs without `! ` errors, undefined commands, or newly introduced `Overfull/Underfull` warnings. Compile to the appropriate build directory and inspect the rendered pages before approval.
+Each requested output must compile without errors, missing glyphs/references, or readability defects; harmless Underfull warnings do not block delivery. Compile to the appropriate build directory and inspect the rendered pages before approval.
+
+The legacy `scripts/build_and_check.zsh` helper still runs two XeLaTeX passes and defaults to both layouts for `--profile board-digitization`. It is optional; use latexmk directly or pass `--layouts main` when only the main output is requested. Its defaults do not impose delivery requirements.

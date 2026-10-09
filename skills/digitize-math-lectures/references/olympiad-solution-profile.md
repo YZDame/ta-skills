@@ -14,7 +14,7 @@ Default to `route-preserving-completion`. Preserve a viable source method; add m
 
 ## 2. Per-problem content contract
 
-Maintain one internal record per problem under `content/`:
+For a large or difficult collection, the following optional working record can help track problems. Small tasks can use source comments and a concise handoff; these records are temporary, not required final materials:
 
 ```yaml
 id:
@@ -50,7 +50,7 @@ Use this order:
 - Write the solution as mathematical actions with their necessary reasons. Explain construction motives, key substitutions, non-obvious estimates, and easily misused conditions. Complete routine algebra directly.
 - Present one natural method that serves the stated teaching goal. Do not add a second solution or broad generalization without a request.
 - Add at most one or two sentences of commentary when it gives a reusable trigger, condition, or warning. Do not generate routine `点评`, `方法提炼`, or `总结回顾` sections.
-- Remove processing narration such as OCR confidence, missing handwriting, source defects, model completion, or verification workflow from the final body. Keep it in `content/` or `review/`.
+- Remove processing narration such as OCR confidence, missing handwriting, source defects, model completion, or verification workflow from the final body. Keep unresolved issues in source comments and the handoff; separate process files are optional and temporary.
 
 ## 4. Mathematical completeness checks
 
@@ -66,7 +66,7 @@ Apply the relevant checklist before marking a problem as verified:
 
 - For transcription plus connective prose or mechanical intermediate steps, perform one strict mathematical check against the statement and source route.
 - Invoke `math-olympiad` for an independent adversarial verification when the completion supplies a substantial part of the proof, introduces a key lemma or construction, encounters ambiguity in the statement, changes or repairs the source route, uses `authored` mode, or triggers one of the mathematical risks above.
-- Independent verification should receive the statement and proposed solution without being asked to imitate the source prose. Reconcile concrete objections in `review/`.
+- Independent verification should receive the statement and proposed solution without being asked to imitate the source prose. Reconcile concrete objections; report any unresolved issue without requiring a separate review file.
 - If verification is unavailable, inconclusive, or fails, set `verification_status: review-required` and retain the project at `REVIEW_REQUIRED`. Compilation is not mathematical approval.
 
 ## 6. Geometry figures
@@ -87,7 +87,7 @@ Infer objects and relations from the statement, not from hand-drawn proportions.
 ## 7. Delivery defaults
 
 - Produce a compact answer booklet.
-- Let `project.yaml.template` remain authoritative. In this workspace, recommend `templates/TST/natoly.sty`; do not bind content semantics to that package.
+- Respect the user-selected template or an existing `project.yaml.template`; a new manifest is optional. In this workspace, recommend `templates/TST/natoly.sty`; do not bind content semantics to that package.
 - Show answers by default and retain the selected template's `noanswers` switch for a student version.
-- Compile and visually inspect both answer-visible and `noanswers` outputs when the selected template supports them.
+- Compile and visually inspect the requested outputs only; create a student PDF when requested, not merely because the style supports it.
 - Keep the first complete draft at `REVIEW_REQUIRED`; only an authorized human review may move it to `APPROVED`.
